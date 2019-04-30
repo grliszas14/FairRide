@@ -6,11 +6,13 @@ import com.firebase.client.Firebase
 
 class MainActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         /* Setup Firebase */
-        //Firebase.setAndroidContext(this);
+        Firebase.setAndroidContext(this);
+        println("dupa");
 
         /* Read & write to Firebase Database */
         // Firebase myFirebaseRef = new Firebase("https://<YOUR-FIREBASE-APP>.firebaseio.com/");

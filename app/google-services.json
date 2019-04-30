@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "760619585524",
+    "firebase_url": "https://fairride-e5d65.firebaseio.com",
+    "project_id": "fairride-e5d65",
+    "storage_bucket": "fairride-e5d65.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760619585524:android:0205c4bae8be8784",
+        "android_client_info": {
+          "package_name": "com.example.fairride"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "760619585524-88kveca23mgb84cl99kd1uej1g41ocrt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsJZs1MpT_cjJcnc01nBlddKK00qbA2Yk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "760619585524-88kveca23mgb84cl99kd1uej1g41ocrt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
