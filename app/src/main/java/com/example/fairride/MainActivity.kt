@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         passengerButton.setOnClickListener {
-            val intent = Intent(this, PassengerActivity::class.java)
+            val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
         }
 
