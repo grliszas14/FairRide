@@ -1,12 +1,20 @@
 package com.example.fairride
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.firebase.client.Firebase
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
+import com.firebase.ui.auth.AuthUI;
 
 class MainActivity : AppCompatActivity() {
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,7 +22,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         /* Setup Firebase */
         Firebase.setAndroidContext(this)
-        println("dupa")
+        var userName = FirebaseAuth.getInstance().currentUser!!.displayName
+        Toast.makeText(this, userName, Toast.LENGTH_LONG).show()
+
 
         driverButton.setOnClickListener{
             val intent = Intent(this, DriverSettingsActivity::class.java)
@@ -24,6 +34,10 @@ class MainActivity : AppCompatActivity() {
         passengerButton.setOnClickListener {
             val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
+        }
+
+        sign_out_button.setOnClickListener {
+            signOut()
         }
 
         /* Read & write to Firebase Database */
@@ -42,4 +56,21 @@ class MainActivity : AppCompatActivity() {
         //});
 
     }
+    private fun signOut() {
+
+        //startActivity(SignInActivity.getLaunchIntent(this).putExtra("ifSignOut", true))
+        //FirebaseAuth.getInstance().signOut()
+        AuthUI.getInstance().signOut(this).addOnCompleteListener {
+            Toast.makeText(this, "wylogowano", Toast.LENGTH_LONG).show()
+            startActivity(SignInActivity.getLaunchIntent(this))
+        }
+    }
+
+    companion object {
+        fun getLaunchIntent(from: Context) = Intent(from, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        }
+    }
+
+
 }

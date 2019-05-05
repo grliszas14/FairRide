@@ -15,6 +15,15 @@
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="167dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="80dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="81dp"/>
+
+    <Button
+            android:text="I'm driver!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/driverButton" android:textSize="30sp"
+            android:layout_marginBottom="20dp" app:layout_constraintBottom_toTopOf="@+id/passengerButton"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="115dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="115dp"/>
     <TextView
             android:text="FairRide"
             android:layout_width="wrap_content"
@@ -25,11 +34,14 @@
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="91dp"
             android:layout_marginBottom="231dp" app:layout_constraintBottom_toTopOf="@+id/driverButton"/>
     <Button
-            android:text="I'm driver!"
+            android:id="@+id/sign_out_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/driverButton" android:textSize="30sp"
-            android:layout_marginBottom="20dp" app:layout_constraintBottom_toTopOf="@+id/passengerButton"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="115dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="115dp"/>
+            android:layout_marginBottom="36dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Sign out"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
