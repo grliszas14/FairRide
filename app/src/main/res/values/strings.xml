@@ -2,4 +2,11 @@
     <string name="app_name">FairRide</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_maps">Map</string>
+
+    <array name="Cars">
+        <item>Audi</item>
+        <item>BMW</item>
+        <item>Opel</item>
+        <item>Seat</item>
+    </array>
 </resources>
