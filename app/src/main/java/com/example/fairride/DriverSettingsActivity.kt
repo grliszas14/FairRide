@@ -28,9 +28,7 @@ class DriverSettingsActivity : AppCompatActivity() {
         keyList = arrayListOf()
         ref = FirebaseDatabase.getInstance().getReference("cars")
 
-        listView.setOnItemClickListener { adapterView, view, i, l ->
-            Toast.makeText(applicationContext, "You chose: " + keyList[i], Toast.LENGTH_SHORT).show()
-        }
+
 
         ref.addValueEventListener(object : ValueEventListener, com.google.firebase.database.ValueEventListener {
             override fun onCancelled(p0: FirebaseError?) {
@@ -42,8 +40,6 @@ class DriverSettingsActivity : AppCompatActivity() {
             }
 
             override fun onDataChange(p0: com.google.firebase.database.DataSnapshot) {
-                Log.d("TAG", "message")
-
                 if (p0!!.exists()) {
                     keyList.clear()
                     for (e in p0.children) {
@@ -60,5 +56,43 @@ class DriverSettingsActivity : AppCompatActivity() {
             }
 
         })
+
+        var query = ref
+        listView.setOnItemClickListener { adapterView, view, i, l ->
+            //Toast.makeText(applicationContext, "You chose: " + keyList[i], Toast.LENGTH_SHORT).show()
+
+            query = query.child(keyList[i])
+            query.addValueEventListener(object : ValueEventListener, com.google.firebase.database.ValueEventListener {
+                override fun onCancelled(p0: FirebaseError?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onDataChange(p0: DataSnapshot?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onDataChange(p0: com.google.firebase.database.DataSnapshot) {
+                    if (p0!!.exists()) {
+                        keyList.clear()
+                        for (e in p0.children) {
+                            keyList.add(e.key!!)
+                            if (keyList[i] == "consumption") {
+                                // nowe activity przekazujac e.value
+                                println(e.value)
+                                Toast.makeText(applicationContext, "Consumption: " + e.value, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                        listView.adapter =
+                            ArrayAdapter<String>(applicationContext, android.R.layout.simple_list_item_1, keyList)
+                    }
+                }
+
+            })
+        }
     }
 }
