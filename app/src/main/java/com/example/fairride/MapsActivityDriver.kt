@@ -33,6 +33,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps_driver)
@@ -113,12 +114,13 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                 ActivityCompat.requestPermissions(this@MapsActivityDriver, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
             }
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null /*Looper.myLooper()*/)
-            if (currentLocation != null) {
+            /*if (currentLocation != null) {
                 println("ELO")
                 println(currentLocation)
                 mMap.isMyLocationEnabled = true
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16.0f))
-            }
+            }*/
+
         }
 
     }
