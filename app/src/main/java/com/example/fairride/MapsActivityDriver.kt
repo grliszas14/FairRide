@@ -9,30 +9,27 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.provider.Settings
+import android.support.v4.app.ActivityCompat
 import android.widget.Toast
+import com.google.android.gms.location.*
+import com.google.android.gms.maps.*
 
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import java.util.jar.Manifest
 import kotlin.system.exitProcess
 
-private const val PERMISSION_REQUEST = 10
+
 class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
 
+    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    lateinit var locationRequest: LocationRequest
+    lateinit var locationCallback: LocationCallback
     private lateinit var mMap: GoogleMap
-    private var permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,
-        android.Manifest.permission.ACCESS_COARSE_LOCATION)
-    lateinit var locationManager: LocationManager
-    private var hasGPS = false
-    private var hasNetwork = false
-    private var locationGPS : Location? = null
-    private var locationNetwork: Location? = null
     lateinit var currentLocation: LatLng
+    val REQUEST_CODE = 1000;
 
 
 
@@ -44,124 +41,44 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
 
 
-    }
-
-
-    @SuppressLint("MissingPermission")
-    private fun getLocation() {
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        hasGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-
-        println(hasGPS)
-        println(hasNetwork)
-        if (hasGPS || hasNetwork) {
-            if (hasGPS) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object: LocationListener  {
-                    override fun onLocationChanged(p0: Location?) {
-                        if(p0 != null) {
-                            locationGPS = p0
-                        }
-
-                    }
-
-                    override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-
-                    }
-
-                    override fun onProviderEnabled(p0: String?) {
-
-                    }
-
-                    override fun onProviderDisabled(p0: String?) {
-
-                    }
-
-                })
-                val localGPSLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                if(localGPSLocation != null) {
-                    locationGPS = localGPSLocation
-                }
-            }
-            if (hasNetwork) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0F, object: LocationListener   {
-                    override fun onLocationChanged(p0: Location?) {
-                        if(p0 != null) {
-                            locationNetwork = p0
-                        }
-
-                    }
-
-                    override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-
-                    }
-
-                    override fun onProviderEnabled(p0: String?) {
-
-                    }
-
-                    override fun onProviderDisabled(p0: String?) {
-
-                    }
-
-                })
-                val localNetworkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                if(localNetworkLocation != null) {
-                    locationGPS = localNetworkLocation
-                }
-            }
-
-            if (locationGPS != null && locationNetwork != null) {
-                if (locationGPS!!.accuracy > locationNetwork!!.accuracy) {
-                    println(locationGPS!!.latitude)
-                    println(locationGPS!!.longitude)
-                } else {
-                    println(locationNetwork!!.latitude)
-                    println(locationNetwork!!.longitude)
-                }
-            }
-            if (locationGPS != null) {
-                println(locationGPS!!.latitude)
-                println(locationGPS!!.longitude)
-
-            }
-            if (locationNetwork !=null) {
-                println(locationNetwork!!.latitude)
-                println(locationNetwork!!.longitude)
-            }
-        } else {
-            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-            getLocation()
-        }
-    }
-
-    private fun checkPermission(permissionArray: Array<String>): Boolean {
-        var allSuccess = true
-        for (i in permissionArray.indices) {
-            if (checkCallingOrSelfPermission(permissionArray[i]) == PackageManager.PERMISSION_DENIED) {
-                allSuccess = false
-            }
-        }
-        return allSuccess
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST) {
-            var allSuccess = true
-            for(i in permissions.indices) {
-                if(grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                    allSuccess = false
+        when(requestCode) {
+            REQUEST_CODE->{
+                if(grantResults.size > 0) {
+                    if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                        Toast.makeText(this@MapsActivityDriver, "Permission granted", Toast.LENGTH_SHORT).show()
+                    else
+                        Toast.makeText(this@MapsActivityDriver, "Permission denied", Toast.LENGTH_SHORT).show()
                 }
-            }
-            if(allSuccess) {
-                println("Permission granted")
             }
         }
     }
+
+    private fun buildLocationCallback() {
+        locationCallback = object: LocationCallback() {
+            override fun onLocationResult(p0: LocationResult?) {
+                var location = p0!!.locations.get(p0!!.locations.size-1)
+                currentLocation = LatLng(location!!.latitude, location!!.longitude)
+                println("Elo")
+            }
+        }
+    }
+
+    private fun buildLocationRequest() {
+        locationRequest = LocationRequest()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest.interval = 5000
+        locationRequest.fastestInterval = 3000
+        locationRequest.smallestDisplacement = 10f
+    }
+
 
     /**
      * Manipulates the map once available.
@@ -174,26 +91,35 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
-        if (checkPermission(permissions)) {
-            getLocation()
-            mMap.isMyLocationEnabled = true
-        } else {
-            requestPermissions(permissions, PERMISSION_REQUEST)
-            //if (!checkPermission(permissions)) {
-            //    exitProcess(-1)
-            //}
-        }
-
-        // Add a marker in Sydney and move the camera
-        //val przasnysz = LatLng(53.02, 20.88)
         var current = LatLng(53.02, 20.88)
-        while(locationGPS == null) {
-            getLocation()
-            current = LatLng(locationGPS!!.latitude, locationGPS!!.longitude)
+        currentLocation = LatLng(53.02, 20.88)
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location : Location? ->
+                currentLocation = LatLng (location!!.latitude, location!!.longitude)
+                println("ELO")
+                println(currentLocation)
+                mMap.isMyLocationEnabled = true
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16.0f))
+            }
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
+        } else {
+            buildLocationRequest()
+            buildLocationCallback()
+
+
+            if(ActivityCompat.checkSelfPermission(this@MapsActivityDriver, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this@MapsActivityDriver, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+                ActivityCompat.requestPermissions(this@MapsActivityDriver, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
+            }
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null /*Looper.myLooper()*/)
+            if (currentLocation != null) {
+                println("ELO")
+                println(currentLocation)
+                mMap.isMyLocationEnabled = true
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16.0f))
+            }
         }
-        //mMap.addMarker(MarkerOptions().position(current).title("Marker in current location"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 16.0f))
 
     }
 }
