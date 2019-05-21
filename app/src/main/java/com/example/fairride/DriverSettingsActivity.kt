@@ -1,5 +1,6 @@
 package com.example.fairride
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -84,6 +85,8 @@ class DriverSettingsActivity : AppCompatActivity() {
                                 // nowe activity przekazujac e.value
                                 println(e.value)
                                 Toast.makeText(applicationContext, "Consumption: " + e.value, Toast.LENGTH_SHORT).show()
+                                val intent = Intent(applicationContext, MapsActivityDriver::class.java)
+                                startActivity(intent)
                             }
                         }
 
