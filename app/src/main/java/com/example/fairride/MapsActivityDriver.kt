@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -13,11 +14,17 @@ import android.os.Looper
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
+import org.json.JSONObject
 import java.util.jar.Manifest
 import kotlin.system.exitProcess
 
@@ -120,6 +127,43 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                 mMap.isMyLocationEnabled = true
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16.0f))
             }*/
+
+            mMap!!.setOnMapClickListener(object: GoogleMap.OnMapClickListener {
+                override fun onMapClick(latLng: LatLng) {
+                    mMap.clear()
+                    val path: MutableList<LatLng> = ArrayList()
+                    val urlDirections = "https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248618d9768f9db4f1d8b5951a97bd8abf3&start=${currentLocation.longitude},${currentLocation.latitude}&end=${latLng.longitude},${latLng.latitude}"
+                    println(urlDirections)
+                    val directionsRequest = object : StringRequest(
+                        Request.Method.GET, urlDirections, Response.Listener<String> {
+                                response ->
+                            val jsonResponse = JSONObject(response)
+                            // Get routes
+                            val features = jsonResponse.getJSONArray("features")
+                            val geometry = features.getJSONObject(0).getJSONObject("geometry")
+                            val coordinatesArray = geometry.getJSONArray("coordinates")
+                            println(coordinatesArray)
+                            for (i in 0 until coordinatesArray.length()) {
+                                val coords = coordinatesArray.getJSONArray(i)
+                                val latitude = coords.getString(0)
+                                val longtitude = coords.getString(1)
+                                val pointLatLng = LatLng(longtitude.toDouble(), latitude.toDouble())
+                                path.add(pointLatLng)
+                            }
+                            for (i in 0 until path.size-1) {
+                                //mMap!!.addPolyline(PolylineOptions().addAll(path).color(Color.RED))
+                                mMap!!.addPolyline(PolylineOptions().add(path[i],path[i+1]).color(Color.RED))
+
+                            }
+                        }, Response.ErrorListener {
+                                _ ->
+                        }){}
+                    val requestQueue = Volley.newRequestQueue(applicationContext)
+
+                    requestQueue.add(directionsRequest)
+                }
+
+            })
 
         }
 
