@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
+import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import org.json.JSONObject
 import java.util.jar.Manifest
+import kotlin.math.round
 import kotlin.system.exitProcess
 
 
@@ -43,6 +45,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTitle("Touch destination on the map")
         setContentView(R.layout.activity_maps_driver)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -138,7 +141,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                         Request.Method.GET, urlDirections, Response.Listener<String> {
                                 response ->
                             val jsonResponse = JSONObject(response)
-                            // Get routes
+                            // Get and draw routes
                             val features = jsonResponse.getJSONArray("features")
                             val geometry = features.getJSONObject(0).getJSONObject("geometry")
                             val coordinatesArray = geometry.getJSONArray("coordinates")
@@ -155,6 +158,45 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                                 mMap!!.addPolyline(PolylineOptions().add(path[i],path[i+1]).color(Color.RED))
 
                             }
+
+                            // Get time and distance
+                            val properties = features.getJSONObject(0).getJSONObject("properties")
+                            val summary = properties.getJSONObject("summary")
+
+                            // Format distance
+                            var meterUnit = "km"
+                            var distance = summary.getString("distance").toDouble()/1000
+                            if (distance > 1.0) {
+                                distance = distance * 10
+                                distance = round(distance)
+                                distance = distance / 10
+                            } else {
+                                distance = round(distance * 1000)
+                                meterUnit = "m"
+                            }
+
+                            val distanceText: TextView = findViewById(R.id.distanceText) as TextView
+                            distanceText.text = "Distance: " + distance.toString() + meterUnit
+
+                            // Format time
+                            val timeText: TextView = findViewById(R.id.timeText) as TextView
+                            val time = round(summary.getString("duration").toDouble()).toInt()
+                            if ( time < 60) {
+                                timeText.text = "Time: " + time.toString() + "s"
+                            } else if(time > 60 && time < 3600) {
+                                val seconds = time % 60
+                                val minutes = (time - seconds) / 60
+                                timeText.text = "Time: " + minutes.toString() + "m " + seconds + "s"
+                            } else if(time > 3600) {
+                                val seconds = time % 60
+                                val minutes = ((time - seconds) % 3600) / 60
+                                val hours = (time - seconds - minutes * 60) / 3600
+                                timeText.text = "Time: " + hours.toString() + "h " + minutes.toString() + "m " + seconds.toString() + "s"
+                            }
+
+
+
+
                         }, Response.ErrorListener {
                                 _ ->
                         }){}
