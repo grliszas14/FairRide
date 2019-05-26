@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="bottom"
-            android:background="@android:color/white">
+            android:background="@color/settings">
         <LinearLayout
                 android:id="@+id/vertic"
                 android:layout_width="wrap_content"
@@ -27,11 +27,12 @@
                 android:orientation="vertical"
                 android:layout_gravity="bottom"
                 android:layout_weight="4"
-                android:background="@android:color/white">
+                android:background="@color/settings">
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="3dp"
+                    android:textColor="#000000"
                     android:text="Distance: "
                     android:id="@+id/distanceText"
             />
@@ -39,6 +40,7 @@
                     android:layout_width="match_parent"
                     android:padding="3dp"
                     android:layout_height="wrap_content"
+                    android:textColor="#000000"
                     android:text="Time: "
                     android:id="@+id/timeText"
             />
@@ -47,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@color/colorPrimary"
                 android:id="@+id/sendRouteButton" android:text="Confirm"/>
     </LinearLayout>
 </FrameLayout>
