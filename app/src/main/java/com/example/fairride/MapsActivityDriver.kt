@@ -25,12 +25,13 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_maps_driver.*
 import org.json.JSONObject
 import java.util.jar.Manifest
 import kotlin.math.round
 import kotlin.system.exitProcess
-
 
 class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
 
@@ -41,7 +42,11 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
     lateinit var currentLocation: LatLng
     val REQUEST_CODE = 1000;
     lateinit var jsonResponse: JSONObject
-
+    lateinit var addressResponse: JSONObject
+    lateinit var fromResponse: JSONObject
+    lateinit var ref : DatabaseReference
+    lateinit var destination: String
+    lateinit var from: String
 
 
 
@@ -53,9 +58,11 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        ref = FirebaseDatabase.getInstance().getReference("routes")
         val bundle = intent.extras
         val consumption = bundle.getDouble("consumption")
         val username = bundle.getString("username")
+        val routeId = ref.push().key
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -66,6 +73,11 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
             jsonResponse.put("username", username)
             jsonResponse.put("consumption", consumption)
             println(jsonResponse)
+
+            val route = Route(destination, from, username, consumption.toString())
+            ref.child(routeId!!).setValue(route)
+            // toast nie dziala wtf
+            Toast.makeText(this@MapsActivityDriver, "Route confirmed", Toast.LENGTH_SHORT)
         }
 
     }
@@ -211,9 +223,53 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                         }, Response.ErrorListener {
                                 _ ->
                         }){}
-                    val requestQueue = Volley.newRequestQueue(applicationContext)
 
+                    val urlAddress = "https://api.openrouteservice.org/geocode/reverse?api_key=5b3ce3597851110001cf6248618d9768f9db4f1d8b5951a97bd8abf3&point.lon=${latLng.longitude}&point.lat=${latLng.latitude}&boundary.circle.radius=5&size=1&layers=address"
+                    val addressRequest = object : StringRequest(
+                        Request.Method.GET, urlAddress, Response.Listener<String> {
+                                response ->
+                            try {
+                                addressResponse = JSONObject(response)
+                                val features = addressResponse.getJSONArray("features")
+                                val properties = features.getJSONObject(0).getJSONObject("properties")
+                                val street = properties.getString("street")
+                                val housenumber = properties.getString("housenumber")
+                                val locality = properties.getString("locality")
+                                destination = street + " " + housenumber + ", " + locality
+                                println(destination)
+                            } catch (t: Throwable) {
+                                destination = "-"
+                            }
+                        }, Response.ErrorListener {
+                                _ ->
+
+                        }){}
+
+                    val urlFrom = "https://api.openrouteservice.org/geocode/reverse?api_key=5b3ce3597851110001cf6248618d9768f9db4f1d8b5951a97bd8abf3&point.lon=${currentLocation.longitude}&point.lat=${currentLocation.latitude}&boundary.circle.radius=5&size=1&layers=address"
+                    val fromRequest = object : StringRequest(
+                        Request.Method.GET, urlFrom, Response.Listener<String> {
+                                response ->
+                            try {
+                                fromResponse = JSONObject(response)
+                                val features = fromResponse.getJSONArray("features")
+                                val properties = features.getJSONObject(0).getJSONObject("properties")
+                                val street = properties.getString("street")
+                                val housenumber = properties.getString("housenumber")
+                                val locality = properties.getString("locality")
+                                from = street + " " + housenumber + ", " + locality
+                                println(from)
+                            } catch (t: Throwable) {
+                                from = "-"
+                            }
+                        }, Response.ErrorListener {
+                                _ ->
+
+                        }){}
+
+                    val requestQueue = Volley.newRequestQueue(applicationContext)
                     requestQueue.add(directionsRequest)
+                    requestQueue.add(addressRequest)
+                    requestQueue.add(fromRequest)
                     sendRouteButton.isClickable = true
                 }
 
