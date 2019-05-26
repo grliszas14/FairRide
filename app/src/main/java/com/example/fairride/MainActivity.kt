@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         driverButton.setOnClickListener{
             val intent = Intent(this, DriverSettingsActivity::class.java)
+            intent.putExtra("username", userName)
             startActivity(intent)
         }
 

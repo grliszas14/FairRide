@@ -25,6 +25,7 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import kotlinx.android.synthetic.main.activity_maps_driver.*
 import org.json.JSONObject
 import java.util.jar.Manifest
 import kotlin.math.round
@@ -39,6 +40,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     lateinit var currentLocation: LatLng
     val REQUEST_CODE = 1000;
+    lateinit var jsonResponse: JSONObject
 
 
 
@@ -51,10 +53,20 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        val bundle = intent.extras
+        val consumption = bundle.getDouble("consumption")
+        val username = bundle.getString("username")
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
-
+        sendRouteButton.isClickable = false
+        sendRouteButton.setOnClickListener {
+            // add modified json to firebase
+            println("sendRouteButton")
+            jsonResponse.put("username", username)
+            jsonResponse.put("consumption", consumption)
+            println(jsonResponse)
+        }
 
     }
 
@@ -140,7 +152,8 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                     val directionsRequest = object : StringRequest(
                         Request.Method.GET, urlDirections, Response.Listener<String> {
                                 response ->
-                            val jsonResponse = JSONObject(response)
+                            //val jsonResponse = JSONObject(response)
+                            jsonResponse = JSONObject(response)
                             // Get and draw routes
                             val features = jsonResponse.getJSONArray("features")
                             val geometry = features.getJSONObject(0).getJSONObject("geometry")
@@ -195,14 +208,13 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                             }
 
 
-
-
                         }, Response.ErrorListener {
                                 _ ->
                         }){}
                     val requestQueue = Volley.newRequestQueue(applicationContext)
 
                     requestQueue.add(directionsRequest)
+                    sendRouteButton.isClickable = true
                 }
 
             })

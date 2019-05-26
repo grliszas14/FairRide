@@ -25,6 +25,8 @@ class DriverSettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_driver_settings)
 
+        val bundle = intent.extras
+        val username = bundle.getString("username")
         listView = findViewById(R.id.listView)
         keyList = arrayListOf()
         ref = FirebaseDatabase.getInstance().getReference("cars")
@@ -86,6 +88,8 @@ class DriverSettingsActivity : AppCompatActivity() {
                                 println(e.value)
                                 Toast.makeText(applicationContext, "Consumption: " + e.value, Toast.LENGTH_SHORT).show()
                                 val intent = Intent(applicationContext, MapsActivityDriver::class.java)
+                                intent.putExtra("username", username)
+                                intent.putExtra("consumption", e.value.toString().toDouble())
                                 startActivity(intent)
                             }
                         }

@@ -47,6 +47,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/send_route" android:text="Confirm"/>
+                android:id="@+id/sendRouteButton" android:text="Confirm"/>
     </LinearLayout>
 </FrameLayout>
