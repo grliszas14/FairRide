@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.Request
@@ -78,6 +79,18 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
             ref.child(routeId!!).setValue(route)
             // toast nie dziala wtf
             Toast.makeText(this@MapsActivityDriver, "Route confirmed", Toast.LENGTH_SHORT)
+            sendRouteButton.visibility = View.GONE
+            distanceText.visibility = View.GONE
+            timeText.visibility = View.GONE
+            endButton.visibility = View.VISIBLE
+            setTitle("Ready to go!")
+        }
+
+        endButton.setOnClickListener {
+            // przejscie do nowego activity
+            // a tam pobranie trasy, policzenie i podsumowanie
+            // i jeszcze otagowanie wpisu w bazie za zakonczony zeby uzytkownik mial co pobrac
+
         }
 
     }
