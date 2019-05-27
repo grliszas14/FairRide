@@ -16,15 +16,17 @@ import com.firebase.client.ValueEventListener
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import org.json.JSONObject
 
 class PassengerActivity : AppCompatActivity() {
 
-    lateinit var mapFragment : SupportMapFragment
-    lateinit var googleMap: GoogleMap
+
     lateinit var ref : DatabaseReference
     lateinit var keyList: ArrayList<String>
     lateinit var routesList: ArrayList<Route>
+    lateinit var jsonResponse: JSONObject
 
 
 
@@ -33,6 +35,7 @@ class PassengerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_passenger)
         ref = FirebaseDatabase.getInstance().getReference("routes")
+        var username = FirebaseAuth.getInstance().currentUser!!.displayName
         keyList = arrayListOf()
         routesList = arrayListOf()
         val listView = findViewById<ListView>(R.id.listViewRoutes)
@@ -53,6 +56,7 @@ class PassengerActivity : AppCompatActivity() {
                         keyList.add(e.key!!)
                         println(keyList)
                     }
+                    routesList.clear()
                     for (e in ds.children) {
                         routesList.add(e.getValue(Route::class.java)!!)
                         println(routesList)
@@ -67,6 +71,14 @@ class PassengerActivity : AppCompatActivity() {
             }
 
         })
+
+        listView.setOnItemClickListener { parent, view, position, id ->
+            val routeId = keyList[position]
+            val route = routesList[position]
+            val routeAdd = Route(route.consumption, route.driver, route.start_from, route.destination)
+            routeAdd.pass1 = username
+            ref.child(routeId!!).setValue(routeAdd)
+        }
 
 
 /*        mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
