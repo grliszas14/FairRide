@@ -23,11 +23,30 @@ data class Route(
 
 
     ) {
-    constructor(consumption: String, driver: String, start_from: String?, destination: String?) : this() {
+    constructor(consumption: String, driver: String, start_from: String, destination: String) : this() {
         this.consumption = consumption
         this.driver = driver
         this.start_from = start_from
         this.destination = destination
+
+    }
+    constructor(route: Route) : this() {
+        this.consumption = route.consumption
+        this.driver = route.driver
+        this.destination = route.destination
+        this.start_from = route.start_from
+        this.pass1 = route.pass1
+        this.pass2 = route.pass2
+        this.pass3 = route.pass3
+        this.pass4 = route.pass4
+        this.pass1Start = route.pass1Start
+        this.pass1End = route.pass1End
+        this.pass2Start = route.pass2Start
+        this.pass2End = route.pass2End
+        this.pass3Start = route.pass3Start
+        this.pass3End = route.pass3End
+        this.pass4Start= route.pass4Start
+        this.pass4End = route.pass4End
 
     }
 

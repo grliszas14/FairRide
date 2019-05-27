@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.SupportActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_passenger.*
 import org.json.JSONObject
+import org.w3c.dom.Text
 
 class PassengerActivity : AppCompatActivity() {
 
@@ -26,7 +29,8 @@ class PassengerActivity : AppCompatActivity() {
     lateinit var ref : DatabaseReference
     lateinit var keyList: ArrayList<String>
     lateinit var routesList: ArrayList<Route>
-    lateinit var jsonResponse: JSONObject
+    var ifIsInRoute: Boolean = false
+    lateinit var currentRoute: Route
 
 
 
@@ -39,6 +43,7 @@ class PassengerActivity : AppCompatActivity() {
         keyList = arrayListOf()
         routesList = arrayListOf()
         val listView = findViewById<ListView>(R.id.listViewRoutes)
+        var routeInfo = findViewById<LinearLayout>(R.id.routeInfo)
 
         ref.addValueEventListener(object : ValueEventListener, com.google.firebase.database.ValueEventListener {
             override fun onCancelled(p0: FirebaseError?) {
@@ -71,21 +76,75 @@ class PassengerActivity : AppCompatActivity() {
             }
 
         })
+        endRoute_button.setOnClickListener{
+            routeInfo.setVisibility(View.INVISIBLE)
+            ifIsInRoute = false
 
+        }
         listView.setOnItemClickListener { parent, view, position, id ->
-            val routeId = keyList[position]
+            val popup = PopupMenu(this, view)
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId){
+                    R.id.startRide_popup -> {
+                        currentRoute = routesList[position]
+                        val routeId = keyList[position]
+                        if (currentRoute.pass1 == "") {
+                            val routeAdd = Route(currentRoute)
+                            routeAdd.pass1 = username
+                            ref.child(routeId!!).setValue(routeAdd)
+
+                            routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
+                            routeInfo.setVisibility(View.VISIBLE)
+                            ifIsInRoute = true
+                        }
+                        else if (currentRoute.pass2 == "") {
+                            val routeAdd = Route(currentRoute)
+                            routeAdd.pass2 = username
+                            ref.child(routeId!!).setValue(routeAdd)
+
+                            routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
+                            routeInfo.setVisibility(View.VISIBLE)
+                            ifIsInRoute = true
+                        }
+                        else if (currentRoute.pass3 == "") {
+                            val routeAdd = Route(currentRoute)
+                            routeAdd.pass3 = username
+                            ref.child(routeId!!).setValue(routeAdd)
+
+                            routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
+                            routeInfo.setVisibility(View.VISIBLE)
+                            ifIsInRoute = true
+                        }
+                        else if (currentRoute.pass4 == "") {
+                            val routeAdd = Route(currentRoute)
+                            routeAdd.pass4 = username
+                            ref.child(routeId!!).setValue(routeAdd)
+
+                            routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
+                            routeInfo.setVisibility(View.VISIBLE)
+                            ifIsInRoute = true
+                        }
+                        else {
+                            Toast.makeText(this, "Nie ma miejsca!", Toast.LENGTH_LONG).show()
+                        }
+
+
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.inflate(R.menu.popup_route)
+            popup.show()
+/*            val routeId = keyList[position]
             val route = routesList[position]
             val routeAdd = Route(route.consumption, route.driver, route.start_from, route.destination)
             routeAdd.pass1 = username
-            ref.child(routeId!!).setValue(routeAdd)
+            ref.child(routeId!!).setValue(routeAdd)*/
         }
 
-
-/*        mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(OnMapReadyCallback {
-            googleMap = it
-        })*/
     }
+
 }
 
 private class ListViewRouteAdapter(context: Context, routesList: ArrayList<Route>): BaseAdapter() {
