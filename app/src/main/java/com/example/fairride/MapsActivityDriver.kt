@@ -237,6 +237,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                                 val locality = properties.getString("locality")
                                 destination = street + " " + housenumber + ", " + locality
                                 println(destination)
+                                mMap.addMarker(MarkerOptions().position(latLng).title(destination)).showInfoWindow()
                             } catch (t: Throwable) {
                                 destination = "-"
                             }
