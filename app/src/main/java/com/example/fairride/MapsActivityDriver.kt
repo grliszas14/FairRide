@@ -75,7 +75,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
             jsonResponse.put("consumption", consumption)
             println(jsonResponse)
 
-            val route = Route(destination, from, username, consumption.toString())
+            val route = Route(consumption.toString(), username, from, destination)
             ref.child(routeId!!).setValue(route)
             // toast nie dziala wtf
             Toast.makeText(this@MapsActivityDriver, "Route confirmed", Toast.LENGTH_SHORT)
