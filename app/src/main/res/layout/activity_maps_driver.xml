@@ -34,6 +34,7 @@
                     android:padding="3dp"
                     android:textColor="#000000"
                     android:text="Distance: "
+                    android:visibility="visible"
                     android:id="@+id/distanceText"
             />
             <TextView
@@ -42,6 +43,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="#000000"
                     android:text="Time: "
+                    android:visibility="visible"
                     android:id="@+id/timeText"
             />
         </LinearLayout>
@@ -50,6 +52,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/colorPrimary"
+                android:visibility="visible"
                 android:id="@+id/sendRouteButton" android:text="Confirm"/>
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/endButton"
+                android:background="@color/colorPrimary"
+                android:text="Done"
+                android:visibility="gone"/>
     </LinearLayout>
 </FrameLayout>
