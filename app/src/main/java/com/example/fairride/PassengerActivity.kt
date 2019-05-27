@@ -50,6 +50,10 @@ class PassengerActivity : AppCompatActivity() {
                 if (ds!!.exists()) {
                     keyList.clear()
                     for (e in ds.children) {
+                        keyList.add(e.key!!)
+                        println(keyList)
+                    }
+                    for (e in ds.children) {
                         routesList.add(e.getValue(Route::class.java)!!)
                         println(routesList)
                     }
