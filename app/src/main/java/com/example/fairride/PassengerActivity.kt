@@ -1,6 +1,8 @@
 package com.example.fairride
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.SupportActivity
@@ -14,9 +16,13 @@ import android.widget.*
 import com.firebase.client.DataSnapshot
 import com.firebase.client.FirebaseError
 import com.firebase.client.ValueEventListener
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_passenger.*
@@ -31,13 +37,22 @@ class PassengerActivity : AppCompatActivity() {
     lateinit var routesList: ArrayList<Route>
     var ifIsInRoute: Boolean = false
     lateinit var currentRoute: Route
+    lateinit var currentRouteId: String
+
+    lateinit var currentLocation: LatLng
+    lateinit var currentLocationS: String
+    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    lateinit var whichPass: String
 
 
 
 
+
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_passenger)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         ref = FirebaseDatabase.getInstance().getReference("routes")
         var username = FirebaseAuth.getInstance().currentUser!!.displayName
         keyList = arrayListOf()
@@ -79,6 +94,25 @@ class PassengerActivity : AppCompatActivity() {
         endRoute_button.setOnClickListener{
             routeInfo.setVisibility(View.INVISIBLE)
             ifIsInRoute = false
+            val routeAdd = Route(currentRoute)
+            currentLocationS = getCurrentLocation()
+            when (whichPass) {
+                "pass1" -> {
+                    routeAdd.pass1End = currentLocationS
+                }
+                "pass2" -> {
+                    routeAdd.pass2End = currentLocationS
+                }
+                "pass3" -> {
+                    routeAdd.pass3End = currentLocationS
+                }
+                "pass4" -> {
+                    routeAdd.pass4End = currentLocationS
+                }
+                else -> false
+            }
+            ref.child(currentRouteId!!).setValue(routeAdd)
+            whichPass = ""
 
         }
         listView.setOnItemClickListener { parent, view, position, id ->
@@ -87,42 +121,52 @@ class PassengerActivity : AppCompatActivity() {
                 when (item.itemId){
                     R.id.startRide_popup -> {
                         currentRoute = routesList[position]
-                        val routeId = keyList[position]
+                        currentRouteId = keyList[position]
+                        currentLocationS = getCurrentLocation()
+                        routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
                         if (currentRoute.pass1 == "") {
                             val routeAdd = Route(currentRoute)
                             routeAdd.pass1 = username
-                            ref.child(routeId!!).setValue(routeAdd)
+                            routeAdd.pass1Start = currentLocationS
+                            currentRoute = routeAdd
+                            ref.child(currentRouteId!!).setValue(routeAdd)
 
-                            routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
-                            routeInfo.setVisibility(View.VISIBLE)
+                            routeInfo.visibility = View.VISIBLE
                             ifIsInRoute = true
+                            whichPass = "pass1"
                         }
                         else if (currentRoute.pass2 == "") {
                             val routeAdd = Route(currentRoute)
                             routeAdd.pass2 = username
-                            ref.child(routeId!!).setValue(routeAdd)
+                            routeAdd.pass2Start = currentLocationS
+                            currentRoute = routeAdd
+                            ref.child(currentRouteId!!).setValue(routeAdd)
 
-                            routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
-                            routeInfo.setVisibility(View.VISIBLE)
+                            routeInfo.visibility = View.VISIBLE
                             ifIsInRoute = true
+                            whichPass = "pass2"
                         }
                         else if (currentRoute.pass3 == "") {
                             val routeAdd = Route(currentRoute)
                             routeAdd.pass3 = username
-                            ref.child(routeId!!).setValue(routeAdd)
+                            routeAdd.pass3Start = currentLocationS
+                            currentRoute = routeAdd
+                            ref.child(currentRouteId!!).setValue(routeAdd)
 
-                            routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
-                            routeInfo.setVisibility(View.VISIBLE)
+                            routeInfo.visibility = View.VISIBLE
                             ifIsInRoute = true
+                            whichPass = "pass3"
                         }
                         else if (currentRoute.pass4 == "") {
                             val routeAdd = Route(currentRoute)
                             routeAdd.pass4 = username
-                            ref.child(routeId!!).setValue(routeAdd)
+                            routeAdd.pass4Start = currentLocationS
+                            currentRoute = routeAdd
+                            ref.child(currentRouteId!!).setValue(routeAdd)
 
-                            routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
-                            routeInfo.setVisibility(View.VISIBLE)
+                            routeInfo.visibility = View.VISIBLE
                             ifIsInRoute = true
+                            whichPass = "pass4"
                         }
                         else {
                             Toast.makeText(this, "Nie ma miejsca!", Toast.LENGTH_LONG).show()
@@ -136,13 +180,20 @@ class PassengerActivity : AppCompatActivity() {
             }
             popup.inflate(R.menu.popup_route)
             popup.show()
-/*            val routeId = keyList[position]
-            val route = routesList[position]
-            val routeAdd = Route(route.consumption, route.driver, route.start_from, route.destination)
-            routeAdd.pass1 = username
-            ref.child(routeId!!).setValue(routeAdd)*/
         }
 
+    }
+    @SuppressLint("MissingPermission")
+    fun getCurrentLocation () : String {
+        currentLocation = LatLng(53.02, 20.88)
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location : Location? ->
+                currentLocation = LatLng (location!!.latitude, location!!.longitude)
+                Toast.makeText(this, currentLocation.toString(), Toast.LENGTH_LONG).show()
+                println(currentLocation.toString())
+
+            }
+        return currentLocation.toString().substring(10, 21)
     }
 
 }
