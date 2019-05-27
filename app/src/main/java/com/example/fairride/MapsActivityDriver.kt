@@ -139,7 +139,6 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        var current = LatLng(53.02, 20.88)
         currentLocation = LatLng(53.02, 20.88)
         fusedLocationProviderClient.lastLocation
             .addOnSuccessListener { location : Location? ->
@@ -161,12 +160,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                 ActivityCompat.requestPermissions(this@MapsActivityDriver, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
             }
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null /*Looper.myLooper()*/)
-            /*if (currentLocation != null) {
-                println("ELO")
-                println(currentLocation)
-                mMap.isMyLocationEnabled = true
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16.0f))
-            }*/
+
 
             mMap!!.setOnMapClickListener(object: GoogleMap.OnMapClickListener {
                 override fun onMapClick(latLng: LatLng) {

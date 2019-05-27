@@ -16,8 +16,7 @@ import android.widget.*
 import com.firebase.client.DataSnapshot
 import com.firebase.client.FirebaseError
 import com.firebase.client.ValueEventListener
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -38,7 +37,8 @@ class PassengerActivity : AppCompatActivity() {
     var ifIsInRoute: Boolean = false
     lateinit var currentRoute: Route
     lateinit var currentRouteId: String
-
+    lateinit var locationRequest: LocationRequest
+    lateinit var locationCallback: LocationCallback
     lateinit var currentLocation: LatLng
     lateinit var currentLocationS: String
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -59,6 +59,14 @@ class PassengerActivity : AppCompatActivity() {
         routesList = arrayListOf()
         val listView = findViewById<ListView>(R.id.listViewRoutes)
         var routeInfo = findViewById<LinearLayout>(R.id.routeInfo)
+        currentLocation = LatLng(53.02, 20.88)
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location : Location? ->
+                currentLocation = LatLng (location!!.latitude, location!!.longitude)
+            }
+        buildLocationRequest()
+        buildLocationCallback()
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null /*Looper.myLooper()*/)
 
         ref.addValueEventListener(object : ValueEventListener, com.google.firebase.database.ValueEventListener {
             override fun onCancelled(p0: FirebaseError?) {
@@ -95,7 +103,8 @@ class PassengerActivity : AppCompatActivity() {
             routeInfo.setVisibility(View.INVISIBLE)
             ifIsInRoute = false
             val routeAdd = Route(currentRoute)
-            currentLocationS = getCurrentLocation()
+            currentLocationS = currentLocation.toString().substring(10,30)
+            println(currentLocationS)
             when (whichPass) {
                 "pass1" -> {
                     routeAdd.pass1End = currentLocationS
@@ -122,7 +131,7 @@ class PassengerActivity : AppCompatActivity() {
                     R.id.startRide_popup -> {
                         currentRoute = routesList[position]
                         currentRouteId = keyList[position]
-                        currentLocationS = getCurrentLocation()
+                        currentLocationS = currentLocation.toString().substring(10,30)
                         routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
                         if (currentRoute.pass1 == "") {
                             val routeAdd = Route(currentRoute)
@@ -183,17 +192,22 @@ class PassengerActivity : AppCompatActivity() {
         }
 
     }
-    @SuppressLint("MissingPermission")
-    fun getCurrentLocation () : String {
-        currentLocation = LatLng(53.02, 20.88)
-        fusedLocationProviderClient.lastLocation
-            .addOnSuccessListener { location : Location? ->
-                currentLocation = LatLng (location!!.latitude, location!!.longitude)
-                Toast.makeText(this, currentLocation.toString(), Toast.LENGTH_LONG).show()
-                println(currentLocation.toString())
 
+    private fun buildLocationCallback() {
+        locationCallback = object: LocationCallback() {
+            override fun onLocationResult(p0: LocationResult?) {
+                var location = p0!!.locations.get(p0!!.locations.size-1)
+                currentLocation = LatLng(location!!.latitude, location!!.longitude)
             }
-        return currentLocation.toString().substring(10, 21)
+        }
+    }
+
+    private fun buildLocationRequest() {
+        locationRequest = LocationRequest()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest.interval = 5000
+        locationRequest.fastestInterval = 3000
+        locationRequest.smallestDisplacement = 10f
     }
 
 }
