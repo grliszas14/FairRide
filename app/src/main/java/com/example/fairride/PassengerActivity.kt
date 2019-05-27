@@ -110,23 +110,3 @@ private class ListViewRouteAdapter(context: Context, routesList: ArrayList<Route
     }
 
 }
-
-@IgnoreExtraProperties
-data class Route(
-    var consumption: String? = "",
-    var driver: String? = "",
-    var start_from: String? = "",
-    var destination: String? = "",
-    var id: String? = ""
-) {
-
-    @Exclude
-    fun toMap(): Map<String, Any?> {
-        return mapOf(
-            "consumption" to consumption,
-            "destination" to destination,
-            "driver" to driver,
-            "start_from" to start_from
-        )
-    }
-}
