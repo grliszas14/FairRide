@@ -151,6 +151,8 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                 newCost1 = (cost + currentRoute.pass1cost!!.toDouble()).toString()
                 routeAdd.pass1cost = newCost1
                 intent.putExtra("cost1", newCost1)
+            } else if (currentRoute.pass1cost != "" && currentRoute.pass1inout == "out") {
+                intent.putExtra("cost1", currentRoute.pass1cost)
             } else {
                 intent.putExtra("cost1", "")
             }
@@ -158,6 +160,8 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                 newCost2 = (cost + currentRoute.pass2cost!!.toDouble()).toString()
                 routeAdd.pass2cost = newCost2
                 intent.putExtra("cost2", newCost2)
+            } else if (currentRoute.pass2cost != "" && currentRoute.pass2inout == "out") {
+                intent.putExtra("cost2", currentRoute.pass2cost)
             } else {
                 intent.putExtra("cost2", "")
             }
@@ -165,6 +169,8 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                 newCost3 = (cost + currentRoute.pass3cost!!.toDouble()).toString()
                 routeAdd.pass3cost = newCost3
                 intent.putExtra("cost3", newCost3)
+            } else if (currentRoute.pass3cost != "" && currentRoute.pass3inout == "out") {
+                intent.putExtra("cost3", currentRoute.pass3cost)
             } else {
                 intent.putExtra("cost3", "")
             }
@@ -172,6 +178,8 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                 newCost4 = (cost + currentRoute.pass4cost!!.toDouble()).toString()
                 routeAdd.pass4cost = newCost4
                 intent.putExtra("cost4", newCost4)
+            } else if (currentRoute.pass4cost != "" && currentRoute.pass4inout == "out") {
+                intent.putExtra("cost4", currentRoute.pass4cost)
             } else {
                 intent.putExtra("cost4", "")
             }
