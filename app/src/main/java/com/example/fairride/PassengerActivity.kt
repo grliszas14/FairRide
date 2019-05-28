@@ -18,6 +18,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
 import com.firebase.client.DataSnapshot
 import com.firebase.client.FirebaseError
 import com.firebase.client.ValueEventListener
@@ -49,6 +52,7 @@ class PassengerActivity : AppCompatActivity() {
     lateinit var currentLocationS: String
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var whichPass: String
+    lateinit var distanceResponse: JSONObject
 
 
 
@@ -534,6 +538,34 @@ class PassengerActivity : AppCompatActivity() {
     }
 
     private fun getDistance(checkpoint: String, currentLoc: String): Double {
+        var distance = 0.0
+        val point1 = checkpoint.split(",")
+        val point2 = currentLoc.split(",")
+        println(point1)
+        println(point2)
+        val distanceUrl = "https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248618d9768f9db4f1d8b5951a97bd8abf3&start=${point1[1]},${point1[0]}&end=${point2[1]},${point2[0]}"
+        println(distanceUrl)
+        val distanceRequest = object : StringRequest(
+            Request.Method.GET, distanceUrl, Response.Listener<String> {
+                    response ->
+                try {
+                    distanceResponse = JSONObject(response)
+                    val features = distanceResponse.getJSONArray("features")
+                    val properties = features.getJSONObject(0).getJSONObject("properties")
+                    val segments = properties.getJSONObject("segments")
+                    distance = segments.getJSONObject("distance").toString().toDouble()
+                } catch (t: Throwable) {
+                    distance = 0.0
+                }
+            }, Response.ErrorListener {
+                    _ ->
+
+            }){}
+
+        return distance
+    }
+
+    private fun getTestDistance(checkpoint: String, currentLoc: String): Double {
         val distance = 5000.0
         return distance
     }

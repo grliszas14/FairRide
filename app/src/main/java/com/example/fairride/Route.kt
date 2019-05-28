@@ -32,11 +32,12 @@ data class Route(
     var routeDone: String? = ""
 
     ) {
-    constructor(consumption: String, driver: String, start_from: String, destination: String) : this() {
+    constructor(consumption: String, driver: String, start_from: String, destination: String, lastCheckpoint: String) : this() {
         this.consumption = consumption
         this.driver = driver
         this.start_from = start_from
         this.destination = destination
+        this.lastCheckpoint = lastCheckpoint
 
     }
     constructor(route: Route) : this() {

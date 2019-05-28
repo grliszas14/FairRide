@@ -50,6 +50,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
     val REQUEST_CODE = 1000;
     lateinit var jsonResponse: JSONObject
     lateinit var addressResponse: JSONObject
+    lateinit var distanceResponse: JSONObject
     lateinit var fromResponse: JSONObject
     lateinit var ref : DatabaseReference
     lateinit var destination: String
@@ -107,7 +108,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
             jsonResponse.put("consumption", consumption)
             println(jsonResponse)
 
-            val route = Route(consumption.toString(), username, from, destination)
+            val route = Route(consumption.toString(), username, from, destination, currentLocation.toString().substring(10,30))
             ref.child(currentRouteId).setValue(route)
             // toast nie dziala wtf
             Toast.makeText(this@MapsActivityDriver, "Route confirmed", Toast.LENGTH_SHORT)
@@ -145,8 +146,9 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                 routeAdd.pass4End = currentLocation.toString().substring(10,30)
             }
 
-            val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocation.toString())
+            val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocation.toString().substring(10,30))
             var cost = ((distance/100000) * consumption / divideBy) * 5.20
+
             if (currentRoute.pass1cost != "" && currentRoute.pass1inout == "in") {
                 newCost1 = (cost + currentRoute.pass1cost!!.toDouble()).toString()
                 routeAdd.pass1cost = newCost1
@@ -263,6 +265,34 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun getDistance(checkpoint: String, currentLoc: String): Double {
+        var distance = 0.0
+        val point1 = checkpoint.split(",")
+        val point2 = currentLoc.split(",")
+        println(point1)
+        println(point2)
+        val distanceUrl = "https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248618d9768f9db4f1d8b5951a97bd8abf3&start=${point1[1]},${point1[0]}&end=${point2[1]},${point2[0]}"
+        println(distanceUrl)
+        val distanceRequest = object : StringRequest(
+            Request.Method.GET, distanceUrl, Response.Listener<String> {
+                    response ->
+                try {
+                    distanceResponse = JSONObject(response)
+                    val features = distanceResponse.getJSONArray("features")
+                    val properties = features.getJSONObject(0).getJSONObject("properties")
+                    val segments = properties.getJSONObject("segments")
+                    distance = segments.getJSONObject("distance").toString().toDouble()
+                } catch (t: Throwable) {
+                    distance = 0.0
+                }
+            }, Response.ErrorListener {
+                    _ ->
+
+            }){}
+
+        return distance
+    }
+
+    private fun getTestDistance(checkpoint: String, currentLoc: String): Double {
         val distance = 5000.0
         return distance
     }
