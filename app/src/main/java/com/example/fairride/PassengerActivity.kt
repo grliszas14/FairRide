@@ -487,7 +487,7 @@ class PassengerActivity : AppCompatActivity() {
         }
 
         springAnim.setStartValue(100f)
-        springAnim.spring.setStiffness(SpringForce.STIFFNESS_LOW)
+        springAnim.spring.setStiffness(SpringForce.STIFFNESS_VERY_LOW)
         springAnim.start()
 
     }
