@@ -88,6 +88,8 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
         }
 
         endButton.setOnClickListener {
+            val intent = Intent(this, DriverSummaryActivity::class.java)
+            startActivity(intent)
             // przejscie do nowego activity
             // a tam pobranie trasy, policzenie i podsumowanie
             // i jeszcze otagowanie wpisu w bazie za zakonczony zeby uzytkownik mial co pobrac
