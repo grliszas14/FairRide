@@ -86,13 +86,15 @@ class PassengerActivity : AppCompatActivity() {
             override fun onDataChange(ds: com.google.firebase.database.DataSnapshot) {
                 if (ds!!.exists()) {
                     keyList.clear()
-                    for (e in ds.children) {
-                        keyList.add(e.key!!)
-                    }
                     routesList.clear()
                     for (e in ds.children) {
+                        keyList.add(e.key!!)
                         routesList.add(e.getValue(Route::class.java)!!)
+                        if (e.key == currentRouteId) {
+                            currentRoute = e.getValue(Route::class.java)!!
+                        }
                     }
+
                     listView.adapter = ListViewRouteAdapter(applicationContext, routesList)
 
                 }
