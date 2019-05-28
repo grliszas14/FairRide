@@ -83,7 +83,7 @@
                 android:layout_weight="0.2"
                 android:gravity="right"
                 android:textAlignment="center"
-                android:background="@drawable/layout_button_shape"
+                android:background="@drawable/layout_button_end"
                 android:padding="5dp"
         />
     </LinearLayout>
