@@ -1,11 +1,9 @@
 package com.example.fairride
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Toast
 import com.firebase.client.DataSnapshot
 import com.firebase.client.FirebaseError
 import com.firebase.client.ValueEventListener
@@ -13,7 +11,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import android.util.Log
-import android.widget.ListAdapter
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
 
 class DriverSettingsActivity : AppCompatActivity() {
 
@@ -50,7 +51,7 @@ class DriverSettingsActivity : AppCompatActivity() {
                         println(keyList)
                     }
 
-                    listView.adapter =  ArrayAdapter<String>(applicationContext, android.R.layout.simple_list_item_1, keyList)
+                    listView.adapter = CarsAdapter(applicationContext, keyList)
                 }
 
             }
@@ -97,12 +98,46 @@ class DriverSettingsActivity : AppCompatActivity() {
                             }
                         }
 
-                        listView.adapter =
-                            ArrayAdapter<String>(applicationContext, android.R.layout.simple_list_item_1, keyList)
+                        listView.adapter = CarsAdapter(applicationContext, keyList)
+
                     }
                 }
 
             })
         }
     }
+}
+
+private class CarsAdapter(context: Context, keyList: ArrayList<String>): BaseAdapter() {
+
+    private val mContext: Context
+    private val mKeyList: ArrayList<String>
+
+
+    init {
+        mContext = context
+        mKeyList = keyList
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val layoutInflater = LayoutInflater.from(mContext)
+        val rowMain = layoutInflater.inflate(R.layout.cars, parent, false)
+        val startTextView = rowMain.findViewById<TextView>(R.id.carText)
+        startTextView.text = mKeyList[position]
+        return rowMain
+    }
+
+    override fun getItem(position: Int): Any {
+        return "TEST STRING"
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getCount(): Int {
+        return mKeyList.size
+    }
+
+
 }

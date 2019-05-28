@@ -337,6 +337,7 @@ class PassengerActivity : AppCompatActivity() {
                                 ref.child(currentRouteId!!).setValue(routeAdd)
 
                                 routeInfo.visibility = View.VISIBLE
+                                animateRoute()
                                 ifIsInRoute = true
                                 whichPass = "pass2"
                             } else if (currentRoute.pass3 == "") {
@@ -383,6 +384,7 @@ class PassengerActivity : AppCompatActivity() {
                                 ref.child(currentRouteId!!).setValue(routeAdd)
 
                                 routeInfo.visibility = View.VISIBLE
+                                animateRoute()
                                 ifIsInRoute = true
                                 whichPass = "pass3"
                             } else if (currentRoute.pass4 == "") {
@@ -428,6 +430,7 @@ class PassengerActivity : AppCompatActivity() {
                                 ref.child(currentRouteId!!).setValue(routeAdd)
 
                                 routeInfo.visibility = View.VISIBLE
+                                animateRoute()
                                 ifIsInRoute = true
                                 whichPass = "pass4"
                             } else {
