@@ -303,6 +303,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
             mMap!!.setOnMapClickListener(object: GoogleMap.OnMapClickListener {
                 override fun onMapClick(latLng: LatLng) {
                     mMap.clear()
+                    endButton.visibility = View.GONE
                     val path: MutableList<LatLng> = ArrayList()
                     val urlDirections = "https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248618d9768f9db4f1d8b5951a97bd8abf3&start=${currentLocation.longitude},${currentLocation.latitude}&end=${latLng.longitude},${latLng.latitude}"
                     println(urlDirections)

@@ -105,6 +105,7 @@ class PassengerActivity : AppCompatActivity() {
                             if (currentRoute.pass1inout == "out") {
                                 val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
                                 intent.putExtra("cost", currentRoute.pass1cost)
+                                routeInfo.visibility = View.GONE
                                 startActivity(intent)
                             }
                         }
@@ -112,6 +113,7 @@ class PassengerActivity : AppCompatActivity() {
                             if (currentRoute.pass2inout == "out") {
                                 val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
                                 intent.putExtra("cost", currentRoute.pass2cost)
+                                routeInfo.visibility = View.GONE
                                 startActivity(intent)
                             }
                         }
@@ -119,6 +121,7 @@ class PassengerActivity : AppCompatActivity() {
                             if (currentRoute.pass3inout == "out") {
                                 val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
                                 intent.putExtra("cost", currentRoute.pass3cost)
+                                routeInfo.visibility = View.GONE
                                 startActivity(intent)
                             }
                         }
@@ -126,6 +129,7 @@ class PassengerActivity : AppCompatActivity() {
                             if (currentRoute.pass4inout == "out") {
                                 val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
                                 intent.putExtra("cost", currentRoute.pass4cost)
+                                routeInfo.visibility = View.GONE
                                 startActivity(intent)
                             }
                         }
