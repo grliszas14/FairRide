@@ -1,11 +1,15 @@
 package com.example.fairride
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.animation.DynamicAnimation
+import android.support.animation.SpringAnimation
+import android.support.animation.SpringForce
 import android.support.v4.app.SupportActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
@@ -25,6 +29,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_driver_settings.*
 import kotlinx.android.synthetic.main.activity_passenger.*
 import org.json.JSONObject
 import org.w3c.dom.Text
@@ -285,6 +290,7 @@ class PassengerActivity : AppCompatActivity() {
                                 ref.child(currentRouteId!!).setValue(routeAdd)
 
                                 routeInfo.visibility = View.VISIBLE
+                                animateRoute()
                                 ifIsInRoute = true
                                 whichPass = "pass1"
                             } else if (currentRoute.pass2 == "") {
@@ -464,6 +470,25 @@ class PassengerActivity : AppCompatActivity() {
         return distance
     }
 
+    fun animateRoute() {
+/*        val v = findViewById<LinearLayout>(R.id.routeInfo)
+        ObjectAnimator.ofFloat(v, "translationY", -100f).apply {
+            duration = 1000
+            start()
+        }*/
+        val springAnim = findViewById<LinearLayout>(R.id.routeInfo).let { img ->
+            // Setting up a spring animation to animate the view’s translationY property with the final
+            // spring position at 0.
+            SpringAnimation(img, DynamicAnimation.TRANSLATION_Y, 0f)
+
+        }
+
+        springAnim.setStartValue(100f)
+        springAnim.spring.setStiffness(SpringForce.STIFFNESS_LOW)
+        springAnim.start()
+
+    }
+
 }
 
 private class ListViewRouteAdapter(context: Context, routesList: ArrayList<Route>): BaseAdapter() {
@@ -498,5 +523,6 @@ private class ListViewRouteAdapter(context: Context, routesList: ArrayList<Route
     override fun getCount(): Int {
         return mRoutesList.size
     }
+
 
 }
