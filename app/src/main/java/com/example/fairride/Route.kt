@@ -19,8 +19,17 @@ data class Route(
     var pass1: String? = "",
     var pass2: String? = "",
     var pass3: String? = "",
-    var pass4: String? = ""
-
+    var pass4: String? = "",
+    var pass1cost: String? = "",
+    var pass2cost: String? = "",
+    var pass3cost: String? = "",
+    var pass4cost: String? = "",
+    var pass1inout: String? = "",
+    var pass2inout: String? = "",
+    var pass3inout: String? = "",
+    var pass4inout: String? = "",
+    var lastCheckpoint: String? = "",
+    var routeDone: String? = ""
 
     ) {
     constructor(consumption: String, driver: String, start_from: String, destination: String) : this() {
@@ -39,6 +48,14 @@ data class Route(
         this.pass2 = route.pass2
         this.pass3 = route.pass3
         this.pass4 = route.pass4
+        this.pass1cost = route.pass1cost
+        this.pass2cost = route.pass2cost
+        this.pass3cost = route.pass3cost
+        this.pass4cost = route.pass4cost
+        this.pass1inout = route.pass1inout
+        this.pass2inout = route.pass2inout
+        this.pass3inout = route.pass3inout
+        this.pass4inout = route.pass4inout
         this.pass1Start = route.pass1Start
         this.pass1End = route.pass1End
         this.pass2Start = route.pass2Start
@@ -47,7 +64,8 @@ data class Route(
         this.pass3End = route.pass3End
         this.pass4Start= route.pass4Start
         this.pass4End = route.pass4End
-
+        this.lastCheckpoint = route.lastCheckpoint
+        this.routeDone = route.routeDone
     }
 
 }
