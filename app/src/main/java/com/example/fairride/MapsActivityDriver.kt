@@ -69,7 +69,6 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
-        sendRouteButton.isClickable = false
         sendRouteButton.setOnClickListener {
             // add modified json to firebase
             println("sendRouteButton")
@@ -280,7 +279,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                     requestQueue.add(directionsRequest)
                     requestQueue.add(addressRequest)
                     requestQueue.add(fromRequest)
-                    sendRouteButton.isClickable = true
+                    sendRouteButton.visibility = View.VISIBLE
                 }
 
             })
