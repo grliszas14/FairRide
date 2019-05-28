@@ -157,7 +157,7 @@ class PassengerActivity : AppCompatActivity() {
                     }
                 }
                 "pass2" -> {
-                    if (currentRoute.pass1inout == "in") {
+                    if (currentRoute.pass2inout == "in") {
                         routeAdd.pass2End = currentLocationS
                         var divideBy = 2
                         val consumption = currentRoute.consumption!!.toDouble()
@@ -180,7 +180,7 @@ class PassengerActivity : AppCompatActivity() {
                         val newCost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
                         routeAdd.pass2cost = newCost
                         if (currentRoute.pass1inout == "in") {
-                            routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                            routeAdd.pass1cost = (cost + currentRoute.pass1cost!!.toDouble()).toString()
                         }
                         if (currentRoute.pass3inout == "in") {
                             routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
@@ -198,7 +198,7 @@ class PassengerActivity : AppCompatActivity() {
                     }
                 }
                 "pass3" -> {
-                    if (currentRoute.pass1inout == "in") {
+                    if (currentRoute.pass3inout == "in") {
                         routeAdd.pass3End = currentLocationS
                         var divideBy = 2
                         val consumption = currentRoute.consumption!!.toDouble()
@@ -222,10 +222,10 @@ class PassengerActivity : AppCompatActivity() {
                         val newCost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
                         routeAdd.pass3cost = newCost
                         if (currentRoute.pass1inout == "in") {
-                            routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                            routeAdd.pass1cost = (cost + currentRoute.pass1cost!!.toDouble()).toString()
                         }
                         if (currentRoute.pass2inout == "in") {
-                            routeAdd.pass2cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                            routeAdd.pass2cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
                         }
                         if (currentRoute.pass4inout == "in") {
                             routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
@@ -240,7 +240,7 @@ class PassengerActivity : AppCompatActivity() {
                     }
                 }
                 "pass4" -> {
-                    if (currentRoute.pass1inout == "in") {
+                    if (currentRoute.pass4inout == "in") {
                         routeAdd.pass4End = currentLocationS
                         var divideBy = 2
                         val consumption = currentRoute.consumption!!.toDouble()
@@ -264,13 +264,13 @@ class PassengerActivity : AppCompatActivity() {
                         val newCost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
                         routeAdd.pass4cost = newCost
                         if (currentRoute.pass1inout == "in") {
-                            routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                            routeAdd.pass1cost = (cost + currentRoute.pass1cost!!.toDouble()).toString()
                         }
                         if (currentRoute.pass2inout == "in") {
-                            routeAdd.pass2cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                            routeAdd.pass2cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
                         }
                         if (currentRoute.pass3inout == "in") {
-                            routeAdd.pass3cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                            routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
                         }
                         routeAdd.lastCheckpoint = currentLocationS
                         routeAdd.pass4inout = "out"
