@@ -319,7 +319,7 @@ class PassengerActivity : AppCompatActivity() {
                                 println(cost)
 
                                 if (currentRoute.pass1inout == "in") {
-                                    routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                                    routeAdd.pass1cost = (cost + currentRoute.pass1cost!!.toDouble()).toString()
                                 }
                                 if (currentRoute.pass3inout == "in") {
                                     routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
