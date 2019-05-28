@@ -109,164 +109,183 @@ class PassengerActivity : AppCompatActivity() {
             val routeAdd = Route(currentRoute)
             currentLocationS = currentLocation.toString().substring(10,30)
             println(currentLocationS)
+            val intent = Intent(this, PassengerSummaryActivity::class.java)
             when (whichPass) {
                 "pass1" -> {
-                    routeAdd.pass1End = currentLocationS
-                    var divideBy = 2
-                    val consumption = currentRoute.consumption!!.toDouble()
 
-                    println(consumption)
-                    if (currentRoute.pass2inout == "in") {
-                        divideBy = divideBy + 1
-                    }
-                    if (currentRoute.pass3inout == "in") {
-                        divideBy = divideBy + 1
-                    }
-                    if (currentRoute.pass4inout == "in") {
-                        divideBy = divideBy + 1
-                    }
+                    if (currentRoute.pass1inout == "in") {
+                        routeAdd.pass1End = currentLocationS
+                        var divideBy = 2
+                        val consumption = currentRoute.consumption!!.toDouble()
 
-                    val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        println(consumption)
+                        if (currentRoute.pass2inout == "in") {
+                            divideBy = divideBy + 1
+                        }
+                        if (currentRoute.pass3inout == "in") {
+                            divideBy = divideBy + 1
+                        }
+                        if (currentRoute.pass4inout == "in") {
+                            divideBy = divideBy + 1
+                        }
 
-                    var cost = ((distance/100000) * consumption / divideBy) * 5.20
-                    println(distance)
-                    println(cost)
-                    val newCost = (cost + currentRoute.pass1cost!!.toDouble()).toString()
-                    routeAdd.pass1cost = newCost
-                    if (currentRoute.pass2inout == "in") {
-                        routeAdd.pass2cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
-                    }
-                    if (currentRoute.pass3inout == "in") {
-                        routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
-                    }
-                    if (currentRoute.pass4inout == "in") {
-                        routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
-                    }
-                    routeAdd.lastCheckpoint = currentLocationS
-                    routeAdd.pass1inout = "out"
+                        val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
 
-                    // enter summary
-                    val intent = Intent(this, PassengerSummaryActivity::class.java)
-                    intent.putExtra("cost", newCost)
-                    startActivity(intent)
+                        var cost = ((distance / 100000) * consumption / divideBy) * 5.20
+                        println(distance)
+                        println(cost)
+                        val newCost = (cost + currentRoute.pass1cost!!.toDouble()).toString()
+                        routeAdd.pass1cost = newCost
+                        if (currentRoute.pass2inout == "in") {
+                            routeAdd.pass2cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                        }
+                        if (currentRoute.pass3inout == "in") {
+                            routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                        }
+                        if (currentRoute.pass4inout == "in") {
+                            routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                        }
+                        routeAdd.lastCheckpoint = currentLocationS
+                        routeAdd.pass1inout = "out"
+
+                        // enter summary
+
+                        intent.putExtra("cost", newCost)
+
+                    } else {
+                        intent.putExtra("cost", currentRoute.pass1cost)
+                    }
                 }
                 "pass2" -> {
-                    routeAdd.pass2End = currentLocationS
-                    var divideBy = 2
-                    val consumption = currentRoute.consumption!!.toDouble()
-
-                    println(consumption)
                     if (currentRoute.pass1inout == "in") {
-                        divideBy = divideBy + 1
-                    }
-                    if (currentRoute.pass3inout == "in") {
-                        divideBy = divideBy + 1
-                    }
-                    if (currentRoute.pass4inout == "in") {
-                        divideBy = divideBy + 1
-                    }
+                        routeAdd.pass2End = currentLocationS
+                        var divideBy = 2
+                        val consumption = currentRoute.consumption!!.toDouble()
 
-                    val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
-                    var cost = ((distance/100000) * consumption / divideBy) * 5.20
-                    println(distance)
-                    println(cost)
-                    val newCost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
-                    routeAdd.pass2cost = newCost
-                    if (currentRoute.pass1inout == "in") {
-                        routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                        println(consumption)
+                        if (currentRoute.pass1inout == "in") {
+                            divideBy = divideBy + 1
+                        }
+                        if (currentRoute.pass3inout == "in") {
+                            divideBy = divideBy + 1
+                        }
+                        if (currentRoute.pass4inout == "in") {
+                            divideBy = divideBy + 1
+                        }
+
+                        val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        var cost = ((distance / 100000) * consumption / divideBy) * 5.20
+                        println(distance)
+                        println(cost)
+                        val newCost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                        routeAdd.pass2cost = newCost
+                        if (currentRoute.pass1inout == "in") {
+                            routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                        }
+                        if (currentRoute.pass3inout == "in") {
+                            routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                        }
+                        if (currentRoute.pass4inout == "in") {
+                            routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                        }
+                        routeAdd.lastCheckpoint = currentLocationS
+                        routeAdd.pass2inout = "out"
+
+                        intent.putExtra("cost", newCost)
+
+                    } else {
+                        intent.putExtra("cost", currentRoute.pass2cost)
                     }
-                    if (currentRoute.pass3inout == "in") {
-                        routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
-                    }
-                    if (currentRoute.pass4inout == "in") {
-                        routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
-                    }
-                    routeAdd.lastCheckpoint = currentLocationS
-                    routeAdd.pass2inout = "out"
-                    val intent = Intent(this, PassengerSummaryActivity::class.java)
-                    intent.putExtra("cost", newCost)
-                    startActivity(intent)
                 }
                 "pass3" -> {
-                    routeAdd.pass3End = currentLocationS
-                    var divideBy = 2
-                    val consumption = currentRoute.consumption!!.toDouble()
-
-                    println(consumption)
                     if (currentRoute.pass1inout == "in") {
-                        divideBy = divideBy + 1
-                    }
-                    if (currentRoute.pass2inout == "in") {
-                        divideBy = divideBy + 1
-                    }
-                    if (currentRoute.pass4inout == "in") {
-                        divideBy = divideBy + 1
-                    }
+                        routeAdd.pass3End = currentLocationS
+                        var divideBy = 2
+                        val consumption = currentRoute.consumption!!.toDouble()
 
-                    val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
-                    var cost = ((distance/100000) * consumption / divideBy) * 5.20
-                    println(distance)
-                    println(cost)
+                        println(consumption)
+                        if (currentRoute.pass1inout == "in") {
+                            divideBy = divideBy + 1
+                        }
+                        if (currentRoute.pass2inout == "in") {
+                            divideBy = divideBy + 1
+                        }
+                        if (currentRoute.pass4inout == "in") {
+                            divideBy = divideBy + 1
+                        }
 
-                    val newCost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
-                    routeAdd.pass3cost = newCost
-                    if (currentRoute.pass1inout == "in") {
-                        routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                        val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        var cost = ((distance / 100000) * consumption / divideBy) * 5.20
+                        println(distance)
+                        println(cost)
+
+                        val newCost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                        routeAdd.pass3cost = newCost
+                        if (currentRoute.pass1inout == "in") {
+                            routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                        }
+                        if (currentRoute.pass2inout == "in") {
+                            routeAdd.pass2cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                        }
+                        if (currentRoute.pass4inout == "in") {
+                            routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                        }
+                        routeAdd.lastCheckpoint = currentLocationS
+                        routeAdd.pass3inout = "out"
+
+                        intent.putExtra("cost", newCost)
+
+                    } else {
+                        intent.putExtra("cost", currentRoute.pass3cost)
                     }
-                    if (currentRoute.pass2inout == "in") {
-                        routeAdd.pass2cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
-                    }
-                    if (currentRoute.pass4inout == "in") {
-                        routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
-                    }
-                    routeAdd.lastCheckpoint = currentLocationS
-                    routeAdd.pass3inout = "out"
-                    val intent = Intent(this, PassengerSummaryActivity::class.java)
-                    intent.putExtra("cost", newCost)
-                    startActivity(intent)
                 }
                 "pass4" -> {
-                    routeAdd.pass4End = currentLocationS
-                    var divideBy = 2
-                    val consumption = currentRoute.consumption!!.toDouble()
-
-                    println(consumption)
                     if (currentRoute.pass1inout == "in") {
-                        divideBy = divideBy + 1
-                    }
-                    if (currentRoute.pass2inout == "in") {
-                        divideBy = divideBy + 1
-                    }
-                    if (currentRoute.pass3inout == "in") {
-                        divideBy = divideBy + 1
-                    }
+                        routeAdd.pass4End = currentLocationS
+                        var divideBy = 2
+                        val consumption = currentRoute.consumption!!.toDouble()
 
-                    val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
-                    var cost = ((distance/100000) * consumption / divideBy) * 5.20
-                    println(distance)
-                    println(cost)
+                        println(consumption)
+                        if (currentRoute.pass1inout == "in") {
+                            divideBy = divideBy + 1
+                        }
+                        if (currentRoute.pass2inout == "in") {
+                            divideBy = divideBy + 1
+                        }
+                        if (currentRoute.pass3inout == "in") {
+                            divideBy = divideBy + 1
+                        }
 
-                    val newCost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
-                    routeAdd.pass4cost = newCost
-                    if (currentRoute.pass1inout == "in") {
-                        routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                        val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        var cost = ((distance / 100000) * consumption / divideBy) * 5.20
+                        println(distance)
+                        println(cost)
+
+                        val newCost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                        routeAdd.pass4cost = newCost
+                        if (currentRoute.pass1inout == "in") {
+                            routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                        }
+                        if (currentRoute.pass2inout == "in") {
+                            routeAdd.pass2cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                        }
+                        if (currentRoute.pass3inout == "in") {
+                            routeAdd.pass3cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                        }
+                        routeAdd.lastCheckpoint = currentLocationS
+                        routeAdd.pass4inout = "out"
+
+                        intent.putExtra("cost", newCost)
+
+                    } else {
+                        intent.putExtra("cost", currentRoute.pass4cost)
                     }
-                    if (currentRoute.pass2inout == "in") {
-                        routeAdd.pass2cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
-                    }
-                    if (currentRoute.pass3inout == "in") {
-                        routeAdd.pass3cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
-                    }
-                    routeAdd.lastCheckpoint = currentLocationS
-                    routeAdd.pass4inout = "out"
-                    val intent = Intent(this, PassengerSummaryActivity::class.java)
-                    intent.putExtra("cost", newCost)
-                    startActivity(intent)
                 }
                 else -> false
             }
             ref.child(currentRouteId!!).setValue(routeAdd)
             whichPass = ""
+            startActivity(intent)
 
         }
         listView.setOnItemClickListener { parent, view, position, id ->
@@ -366,10 +385,10 @@ class PassengerActivity : AppCompatActivity() {
                                 println(cost)
 
                                 if (currentRoute.pass1inout == "in") {
-                                    routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                                    routeAdd.pass1cost = (cost + currentRoute.pass1cost!!.toDouble()).toString()
                                 }
                                 if (currentRoute.pass2inout == "in") {
-                                    routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                                    routeAdd.pass2cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
                                 }
                                 if (currentRoute.pass4inout == "in") {
                                     routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
@@ -412,13 +431,13 @@ class PassengerActivity : AppCompatActivity() {
                                 println(cost)
 
                                 if (currentRoute.pass1inout == "in") {
-                                    routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                                    routeAdd.pass1cost = (cost + currentRoute.pass1cost!!.toDouble()).toString()
                                 }
                                 if (currentRoute.pass2inout == "in") {
-                                    routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                                    routeAdd.pass2cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
                                 }
                                 if (currentRoute.pass3inout == "in") {
-                                    routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                                    routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
                                 }
                                 routeAdd.lastCheckpoint = currentLocationS
                                 //---------------------------------------------------
