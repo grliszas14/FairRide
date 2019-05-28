@@ -5,7 +5,10 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".PassengerActivity" android:orientation="vertical">
+        tools:context=".PassengerActivity"
+        android:orientation="vertical"
+        android:background="#757575"
+>
 
 
     <TextView
@@ -14,7 +17,8 @@
             android:inputType="textPersonName"
             android:gravity="center"
             android:textSize="25dp"
-            android:text="Przejazdy"
+            android:text="Routes"
+            android:textColor="#F5F5F5"
             android:ems="11"
             android:id="@+id/editText"
             android:layout_marginTop="16dp"
@@ -26,17 +30,24 @@
             android:layout_height="0dip"
             android:layout_weight="1"
             android:id="@+id/listViewRoutes"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+
+    />
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="93dp"
+            android:layout_height="75dp"
             android:gravity="bottom"
             android:id="@+id/routeInfo"
-            android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
-            android:visibility="invisible">
+            android:visibility="invisible"
+            android:background="#FFA726"
+            android:padding="5dp"
+            android:paddingLeft="1dp"
+    >
         <ImageView
-                android:layout_width="65dp"
+                android:layout_width="48dp"
                 android:layout_height="53dp"
                 android:layout_gravity="start"
                 android:src="@drawable/right_arrow_2"
@@ -44,20 +55,36 @@
                 android:maxHeight="50dp"
                 android:maxWidth="70dp"
                 android:layout_weight="0.001"
-                android:visibility="visible" app:srcCompat="@drawable/right_arrow_1"/>
+                android:visibility="visible"
+                app:srcCompat="@drawable/right_arrow_1"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="1dp"
+        />
         <TextView
                 android:text="TextView"
-                android:layout_width="147dp"
-                android:layout_height="92dp"
-                android:id="@+id/route_textView"
-                android:visibility="visible"
-                android:gravity="left" android:layout_weight="1" android:textSize="18sp"/>
-        <Button
-                android:text="End ride"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/route_textView"
+                android:visibility="visible"
+                android:textColor="#FFFFFF"
+                android:gravity="left"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="3dp"
+
+        />
+        <Button
+                android:text="End"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
                 android:id="@+id/endRoute_button"
                 android:layout_weight="0.2"
-                android:gravity="right" android:textAlignment="center"/>
+                android:gravity="right"
+                android:textAlignment="center"
+                android:background="@drawable/layout_button_shape"
+                android:padding="5dp"
+        />
     </LinearLayout>
 </LinearLayout>

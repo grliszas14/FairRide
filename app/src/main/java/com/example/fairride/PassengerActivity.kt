@@ -125,70 +125,68 @@ class PassengerActivity : AppCompatActivity() {
 
         }
         listView.setOnItemClickListener { parent, view, position, id ->
-            val popup = PopupMenu(this, view)
-            popup.setOnMenuItemClickListener { item ->
-                when (item.itemId){
-                    R.id.startRide_popup -> {
-                        currentRoute = routesList[position]
-                        currentRouteId = keyList[position]
-                        currentLocationS = currentLocation.toString().substring(10,30)
-                        routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
-                        if (currentRoute.pass1 == "") {
-                            val routeAdd = Route(currentRoute)
-                            routeAdd.pass1 = username
-                            routeAdd.pass1Start = currentLocationS
-                            currentRoute = routeAdd
-                            ref.child(currentRouteId!!).setValue(routeAdd)
+            if (!ifIsInRoute) {
+                val popup = PopupMenu(this, view)
+                popup.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.startRide_popup -> {
+                            currentRoute = routesList[position]
+                            currentRouteId = keyList[position]
+                            currentLocationS = currentLocation.toString().substring(10, 30)
+                            routeInfo.findViewById<TextView>(R.id.route_textView).text = currentRoute.destination
+                            if (currentRoute.pass1 == "") {
+                                val routeAdd = Route(currentRoute)
+                                routeAdd.pass1 = username
+                                routeAdd.pass1Start = currentLocationS
+                                currentRoute = routeAdd
+                                ref.child(currentRouteId!!).setValue(routeAdd)
 
-                            routeInfo.visibility = View.VISIBLE
-                            ifIsInRoute = true
-                            whichPass = "pass1"
+                                routeInfo.visibility = View.VISIBLE
+                                ifIsInRoute = true
+                                whichPass = "pass1"
+                            } else if (currentRoute.pass2 == "") {
+                                val routeAdd = Route(currentRoute)
+                                routeAdd.pass2 = username
+                                routeAdd.pass2Start = currentLocationS
+                                currentRoute = routeAdd
+                                ref.child(currentRouteId!!).setValue(routeAdd)
+
+                                routeInfo.visibility = View.VISIBLE
+                                ifIsInRoute = true
+                                whichPass = "pass2"
+                            } else if (currentRoute.pass3 == "") {
+                                val routeAdd = Route(currentRoute)
+                                routeAdd.pass3 = username
+                                routeAdd.pass3Start = currentLocationS
+                                currentRoute = routeAdd
+                                ref.child(currentRouteId!!).setValue(routeAdd)
+
+                                routeInfo.visibility = View.VISIBLE
+                                ifIsInRoute = true
+                                whichPass = "pass3"
+                            } else if (currentRoute.pass4 == "") {
+                                val routeAdd = Route(currentRoute)
+                                routeAdd.pass4 = username
+                                routeAdd.pass4Start = currentLocationS
+                                currentRoute = routeAdd
+                                ref.child(currentRouteId!!).setValue(routeAdd)
+
+                                routeInfo.visibility = View.VISIBLE
+                                ifIsInRoute = true
+                                whichPass = "pass4"
+                            } else {
+                                Toast.makeText(this, "Nie ma miejsca!", Toast.LENGTH_LONG).show()
+                            }
+
+
+                            true
                         }
-                        else if (currentRoute.pass2 == "") {
-                            val routeAdd = Route(currentRoute)
-                            routeAdd.pass2 = username
-                            routeAdd.pass2Start = currentLocationS
-                            currentRoute = routeAdd
-                            ref.child(currentRouteId!!).setValue(routeAdd)
-
-                            routeInfo.visibility = View.VISIBLE
-                            ifIsInRoute = true
-                            whichPass = "pass2"
-                        }
-                        else if (currentRoute.pass3 == "") {
-                            val routeAdd = Route(currentRoute)
-                            routeAdd.pass3 = username
-                            routeAdd.pass3Start = currentLocationS
-                            currentRoute = routeAdd
-                            ref.child(currentRouteId!!).setValue(routeAdd)
-
-                            routeInfo.visibility = View.VISIBLE
-                            ifIsInRoute = true
-                            whichPass = "pass3"
-                        }
-                        else if (currentRoute.pass4 == "") {
-                            val routeAdd = Route(currentRoute)
-                            routeAdd.pass4 = username
-                            routeAdd.pass4Start = currentLocationS
-                            currentRoute = routeAdd
-                            ref.child(currentRouteId!!).setValue(routeAdd)
-
-                            routeInfo.visibility = View.VISIBLE
-                            ifIsInRoute = true
-                            whichPass = "pass4"
-                        }
-                        else {
-                            Toast.makeText(this, "Nie ma miejsca!", Toast.LENGTH_LONG).show()
-                        }
-
-
-                        true
+                        else -> false
                     }
-                    else -> false
                 }
+                popup.inflate(R.menu.popup_route)
+                popup.show()
             }
-            popup.inflate(R.menu.popup_route)
-            popup.show()
         }
 
     }

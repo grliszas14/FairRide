@@ -2,10 +2,12 @@ package com.example.fairride
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.renderscript.Sampler
+import android.support.v4.app.ActivityCompat
 import android.widget.Toast
 import com.firebase.client.DataSnapshot
 import com.firebase.client.Firebase
@@ -21,6 +23,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : AppCompatActivity() {
+    val REQUEST_CODE = 1000
 
     //
 
@@ -31,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         Firebase.setAndroidContext(this)
         var userName = FirebaseAuth.getInstance().currentUser!!.displayName
         Toast.makeText(this, userName, Toast.LENGTH_LONG).show()
-
+        getPermissionForLocation()
 
         driverButton.setOnClickListener{
             val intent = Intent(this, DriverSettingsActivity::class.java)
@@ -81,5 +84,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun getPermissionForLocation () {
+        if(ActivityCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
+        }
+    }
 
 }
