@@ -83,14 +83,17 @@ class DriverSettingsActivity : AppCompatActivity() {
                         keyList.clear()
                         for (e in p0.children) {
                             keyList.add(e.key!!)
-                            if (keyList[i] == "consumption") {
-                                // nowe activity przekazujac e.value
-                                println(e.value)
-                                Toast.makeText(applicationContext, "Consumption: " + e.value, Toast.LENGTH_SHORT).show()
-                                val intent = Intent(applicationContext, MapsActivityDriver::class.java)
-                                intent.putExtra("username", username)
-                                intent.putExtra("consumption", e.value.toString().toDouble())
-                                startActivity(intent)
+                            try {
+                                if (keyList[i] == "consumption") {
+                                    Toast.makeText(applicationContext, "Consumption: " + e.value, Toast.LENGTH_SHORT)
+                                        .show()
+                                    val intent = Intent(applicationContext, MapsActivityDriver::class.java)
+                                    intent.putExtra("username", username)
+                                    intent.putExtra("consumption", e.value.toString().toDouble())
+                                    startActivity(intent)
+                                }
+                            } catch (t:Throwable) {
+
                             }
                         }
 
