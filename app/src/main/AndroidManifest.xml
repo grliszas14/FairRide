@@ -20,6 +20,7 @@
         <activity android:name=".DriverSummaryActivity">
         </activity>
         <activity android:name=".PassengerSummaryActivity">
+            android:launchMode="singleTop"
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

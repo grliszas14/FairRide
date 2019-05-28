@@ -26,4 +26,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:textSize="60dp"
             android:textColor="#000000" app:layout_constraintVertical_bias="0.343"/>
+    <Button
+            android:text="OK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button"
+            android:background="@drawable/layout_button_shape"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="84dp" app:layout_constraintBottom_toTopOf="@+id/contribution"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="323dp"
+            app:layout_constraintHorizontal_bias="0.25" app:layout_constraintVertical_bias="0.18"
+            android:layout_marginTop="500dp" android:layout_marginStart="200dp"/>
+
 </android.support.constraint.ConstraintLayout>

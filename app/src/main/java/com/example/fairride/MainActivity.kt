@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         /* Setup Firebase */
         Firebase.setAndroidContext(this)
         var userName = FirebaseAuth.getInstance().currentUser!!.displayName
-        Toast.makeText(this, userName, Toast.LENGTH_LONG).show()
+        //Toast.makeText(this, userName, Toast.LENGTH_LONG).show()
         getPermissionForLocation()
 
         driverButton.setOnClickListener{
