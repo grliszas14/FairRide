@@ -22,12 +22,16 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.firebase.client.DataSnapshot
+import com.firebase.client.FirebaseError
+import com.firebase.client.ValueEventListener
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_maps_driver.*
@@ -50,6 +54,8 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
     lateinit var ref : DatabaseReference
     lateinit var destination: String
     lateinit var from: String
+    lateinit var currentRouteId: String
+    lateinit var currentRoute: Route
 
 
 
@@ -65,7 +71,32 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
         val bundle = intent.extras
         val consumption = bundle.getDouble("consumption")
         val username = bundle.getString("username")
-        val routeId = ref.push().key
+        currentRouteId = ref.push().key!!
+
+        ref.addValueEventListener(object : ValueEventListener, com.google.firebase.database.ValueEventListener {
+            override fun onCancelled(p0: FirebaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(p0: DataSnapshot?) {
+
+            }
+
+            override fun onDataChange(ds: com.google.firebase.database.DataSnapshot) {
+                if (ds!!.exists()) {
+                    for (e in ds.children) {
+                        if ( e.key == currentRouteId) {
+                            currentRoute = e.getValue(Route::class.java)!!
+                        }
+                    }
+                }
+
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+        })
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -77,7 +108,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
             println(jsonResponse)
 
             val route = Route(consumption.toString(), username, from, destination)
-            ref.child(routeId!!).setValue(route)
+            ref.child(currentRouteId).setValue(route)
             // toast nie dziala wtf
             Toast.makeText(this@MapsActivityDriver, "Route confirmed", Toast.LENGTH_SHORT)
             sendRouteButton.visibility = View.GONE
@@ -88,7 +119,98 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
         }
 
         endButton.setOnClickListener {
+            val routeAdd = Route(currentRoute)
+            var divideBy = 2
+            val consumption = currentRoute.consumption!!.toDouble()
+            lateinit var newCost1: String
+            lateinit var newCost2: String
+            lateinit var newCost3: String
+            lateinit var newCost4: String
             val intent = Intent(this, DriverSummaryActivity::class.java)
+
+            if (currentRoute.pass1inout == "in") {
+                divideBy = divideBy + 1
+                routeAdd.pass1End = currentLocation.toString()
+            }
+            if (currentRoute.pass2inout == "in") {
+                divideBy = divideBy + 1
+                routeAdd.pass2End = currentLocation.toString()
+            }
+            if (currentRoute.pass3inout == "in") {
+                divideBy = divideBy + 1
+                routeAdd.pass3End = currentLocation.toString()
+            }
+            if (currentRoute.pass4inout == "in") {
+                divideBy = divideBy + 1
+                routeAdd.pass4End = currentLocation.toString()
+            }
+
+            val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocation.toString())
+            var cost = ((distance/100000) * consumption / divideBy) * 5.20
+            if (currentRoute.pass1cost != "") {
+                newCost1 = (cost + currentRoute.pass1cost!!.toDouble()).toString()
+                routeAdd.pass1cost = newCost1
+                intent.putExtra("cost1", newCost1)
+            } else {
+                intent.putExtra("cost1", "")
+            }
+            if (currentRoute.pass2cost != "") {
+                newCost2 = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                routeAdd.pass2cost = newCost2
+                intent.putExtra("cost2", newCost2)
+            } else {
+                intent.putExtra("cost2", "")
+            }
+            if (currentRoute.pass3cost != "") {
+                newCost3 = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                routeAdd.pass3cost = newCost3
+                intent.putExtra("cost3", newCost3)
+            } else {
+                intent.putExtra("cost3", "")
+            }
+            if (currentRoute.pass4cost != "") {
+                newCost4 = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                routeAdd.pass4cost = newCost4
+                intent.putExtra("cost4", newCost4)
+            } else {
+                intent.putExtra("cost4", "")
+            }
+
+            if (currentRoute.pass1inout == "in") {
+                routeAdd.pass1inout = "out"
+            }
+            if (currentRoute.pass2inout == "in") {
+                routeAdd.pass2inout = "out"
+            }
+            if (currentRoute.pass3inout == "in") {
+                routeAdd.pass3inout = "out"
+            }
+            if (currentRoute.pass4inout == "in") {
+                routeAdd.pass4inout = "out"
+            }
+            routeAdd.lastCheckpoint = currentLocation.toString().substring(10,30)
+            ref.child(currentRouteId!!).setValue(routeAdd)
+
+            if (currentRoute.pass1 != "") {
+                intent.putExtra("user1", currentRoute.pass1)
+            } else {
+                intent.putExtra("user1", "")
+            }
+            if (currentRoute.pass1 != "") {
+                intent.putExtra("user2", currentRoute.pass2)
+            } else {
+                intent.putExtra("user2", "")
+            }
+            if (currentRoute.pass1 != "") {
+                intent.putExtra("user3", currentRoute.pass3)
+            } else {
+                intent.putExtra("user3", "")
+            }
+            if (currentRoute.pass1 != "") {
+                intent.putExtra("user4", currentRoute.pass4)
+            } else {
+                intent.putExtra("user4", "")
+            }
             startActivity(intent)
             // przejscie do nowego activity
             // a tam pobranie trasy, policzenie i podsumowanie
@@ -130,7 +252,10 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
         locationRequest.smallestDisplacement = 10f
     }
 
-
+    private fun getDistance(checkpoint: String, currentLoc: String): Double {
+        val distance = 5000.0
+        return distance
+    }
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
