@@ -64,6 +64,7 @@ class PassengerActivity : AppCompatActivity() {
         keyList = arrayListOf()
         routesList = arrayListOf()
         currentRoute = Route("elo", "siema", "520", "supcio")
+        currentRouteId = "fajnie5"
         val listView = findViewById<ListView>(R.id.listViewRoutes)
         var routeInfo = findViewById<LinearLayout>(R.id.routeInfo)
         currentLocation = LatLng(53.02, 20.88)
