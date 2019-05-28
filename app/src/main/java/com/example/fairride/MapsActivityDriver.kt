@@ -130,45 +130,45 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
 
             if (currentRoute.pass1inout == "in") {
                 divideBy = divideBy + 1
-                routeAdd.pass1End = currentLocation.toString()
+                routeAdd.pass1End = currentLocation.toString().substring(10,30)
             }
             if (currentRoute.pass2inout == "in") {
                 divideBy = divideBy + 1
-                routeAdd.pass2End = currentLocation.toString()
+                routeAdd.pass2End = currentLocation.toString().substring(10,30)
             }
             if (currentRoute.pass3inout == "in") {
                 divideBy = divideBy + 1
-                routeAdd.pass3End = currentLocation.toString()
+                routeAdd.pass3End = currentLocation.toString().substring(10,30)
             }
             if (currentRoute.pass4inout == "in") {
                 divideBy = divideBy + 1
-                routeAdd.pass4End = currentLocation.toString()
+                routeAdd.pass4End = currentLocation.toString().substring(10,30)
             }
 
             val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocation.toString())
             var cost = ((distance/100000) * consumption / divideBy) * 5.20
-            if (currentRoute.pass1cost != "") {
+            if (currentRoute.pass1cost != "" && currentRoute.pass1inout == "in") {
                 newCost1 = (cost + currentRoute.pass1cost!!.toDouble()).toString()
                 routeAdd.pass1cost = newCost1
                 intent.putExtra("cost1", newCost1)
             } else {
                 intent.putExtra("cost1", "")
             }
-            if (currentRoute.pass2cost != "") {
+            if (currentRoute.pass2cost != "" && currentRoute.pass2inout == "in") {
                 newCost2 = (cost + currentRoute.pass2cost!!.toDouble()).toString()
                 routeAdd.pass2cost = newCost2
                 intent.putExtra("cost2", newCost2)
             } else {
                 intent.putExtra("cost2", "")
             }
-            if (currentRoute.pass3cost != "") {
+            if (currentRoute.pass3cost != "" && currentRoute.pass3inout == "in") {
                 newCost3 = (cost + currentRoute.pass3cost!!.toDouble()).toString()
                 routeAdd.pass3cost = newCost3
                 intent.putExtra("cost3", newCost3)
             } else {
                 intent.putExtra("cost3", "")
             }
-            if (currentRoute.pass4cost != "") {
+            if (currentRoute.pass4cost != "" && currentRoute.pass4inout == "in") {
                 newCost4 = (cost + currentRoute.pass4cost!!.toDouble()).toString()
                 routeAdd.pass4cost = newCost4
                 intent.putExtra("cost4", newCost4)
