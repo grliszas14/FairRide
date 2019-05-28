@@ -91,41 +91,42 @@ class PassengerActivity : AppCompatActivity() {
                     keyList.clear()
                     routesList.clear()
                     for (e in ds.children) {
-                        if (e.child("routeDone").toString() != "1") {
+                        if (e.child("routeDone").value != "1") {
                             keyList.add(e.key!!)
                             routesList.add(e.getValue(Route::class.java)!!)
                             if (e.key == currentRouteId) {
                                 currentRoute = e.getValue(Route::class.java)!!
-                                when (whichPass) {
-                                    "pass1" -> {
-                                        if (currentRoute.pass1inout == "out") {
-                                            val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
-                                            intent.putExtra("cost", currentRoute.pass1cost)
-                                            startActivity(intent)
-                                        }
-                                    }
-                                    "pass2" -> {
-                                        if (currentRoute.pass2inout == "out") {
-                                            val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
-                                            intent.putExtra("cost", currentRoute.pass2cost)
-                                            startActivity(intent)
-                                        }
-                                    }
-                                    "pass3" -> {
-                                        if (currentRoute.pass3inout == "out") {
-                                            val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
-                                            intent.putExtra("cost", currentRoute.pass3cost)
-                                            startActivity(intent)
-                                        }
-                                    }
-                                    "pass4" -> {
-                                        if (currentRoute.pass4inout == "out") {
-                                            val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
-                                            intent.putExtra("cost", currentRoute.pass4cost)
-                                            startActivity(intent)
-                                        }
-                                    }
-                                }
+
+                            }
+                        }
+                    }
+                    when (whichPass) {
+                        "pass1" -> {
+                            if (currentRoute.pass1inout == "out") {
+                                val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
+                                intent.putExtra("cost", currentRoute.pass1cost)
+                                startActivity(intent)
+                            }
+                        }
+                        "pass2" -> {
+                            if (currentRoute.pass2inout == "out") {
+                                val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
+                                intent.putExtra("cost", currentRoute.pass2cost)
+                                startActivity(intent)
+                            }
+                        }
+                        "pass3" -> {
+                            if (currentRoute.pass3inout == "out") {
+                                val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
+                                intent.putExtra("cost", currentRoute.pass3cost)
+                                startActivity(intent)
+                            }
+                        }
+                        "pass4" -> {
+                            if (currentRoute.pass4inout == "out") {
+                                val intent = Intent(applicationContext, PassengerSummaryActivity::class.java)
+                                intent.putExtra("cost", currentRoute.pass4cost)
+                                startActivity(intent)
                             }
                         }
                     }
