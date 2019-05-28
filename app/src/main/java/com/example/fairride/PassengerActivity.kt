@@ -82,12 +82,10 @@ class PassengerActivity : AppCompatActivity() {
                     keyList.clear()
                     for (e in ds.children) {
                         keyList.add(e.key!!)
-                        println(keyList)
                     }
                     routesList.clear()
                     for (e in ds.children) {
                         routesList.add(e.getValue(Route::class.java)!!)
-                        println(routesList)
                     }
                     listView.adapter = ListViewRouteAdapter(applicationContext, routesList)
 
@@ -108,15 +106,142 @@ class PassengerActivity : AppCompatActivity() {
             when (whichPass) {
                 "pass1" -> {
                     routeAdd.pass1End = currentLocationS
+                    var divideBy = 2
+                    val consumption = currentRoute.consumption!!.toDouble()
+
+                    println(consumption)
+                    if (currentRoute.pass2inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+                    if (currentRoute.pass3inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+                    if (currentRoute.pass4inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+
+                    val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+
+                    var cost = (distance/100000) * consumption / divideBy
+                    println(distance)
+                    println(cost)
+                    routeAdd.pass1cost = (cost + currentRoute.pass1cost!!.toDouble()).toString()
+                    if (currentRoute.pass2inout == "in") {
+                        routeAdd.pass2cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                    }
+                    if (currentRoute.pass3inout == "in") {
+                        routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                    }
+                    if (currentRoute.pass4inout == "in") {
+                        routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                    }
+                    routeAdd.lastCheckpoint = currentLocationS
+                    routeAdd.pass1inout = "out"
+                    //pobierz info o route
+                    //sprawdz inouts zeby wiedziec przez ile podzielic trase
+                    // sprawdz ostatni checkpoint i sprawdz dystans
+                    // policz skladke i zaktualizuj
                 }
                 "pass2" -> {
                     routeAdd.pass2End = currentLocationS
+                    var divideBy = 2
+                    val consumption = currentRoute.consumption!!.toDouble()
+
+                    println(consumption)
+                    if (currentRoute.pass1inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+                    if (currentRoute.pass3inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+                    if (currentRoute.pass4inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+
+                    val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                    var cost = (distance/100000) * consumption / divideBy
+                    println(distance)
+                    println(cost)
+                    routeAdd.pass2cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                    if (currentRoute.pass1inout == "in") {
+                        routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                    }
+                    if (currentRoute.pass3inout == "in") {
+                        routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                    }
+                    if (currentRoute.pass4inout == "in") {
+                        routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                    }
+                    routeAdd.lastCheckpoint = currentLocationS
+                    routeAdd.pass2inout = "out"
                 }
                 "pass3" -> {
                     routeAdd.pass3End = currentLocationS
+                    var divideBy = 2
+                    val consumption = currentRoute.consumption!!.toDouble()
+
+                    println(consumption)
+                    if (currentRoute.pass1inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+                    if (currentRoute.pass2inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+                    if (currentRoute.pass4inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+
+                    val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                    var cost = (distance/100000) * consumption / divideBy
+                    println(distance)
+                    println(cost)
+
+                    routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                    if (currentRoute.pass1inout == "in") {
+                        routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                    }
+                    if (currentRoute.pass2inout == "in") {
+                        routeAdd.pass2cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                    }
+                    if (currentRoute.pass4inout == "in") {
+                        routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                    }
+                    routeAdd.lastCheckpoint = currentLocationS
+                    routeAdd.pass3inout = "out"
                 }
                 "pass4" -> {
                     routeAdd.pass4End = currentLocationS
+                    var divideBy = 2
+                    val consumption = currentRoute.consumption!!.toDouble()
+
+                    println(consumption)
+                    if (currentRoute.pass1inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+                    if (currentRoute.pass2inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+                    if (currentRoute.pass3inout == "in") {
+                        divideBy = divideBy + 1
+                    }
+
+                    val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                    var cost = (distance/100000) * consumption / divideBy
+                    println(distance)
+                    println(cost)
+
+                    routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                    if (currentRoute.pass1inout == "in") {
+                        routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                    }
+                    if (currentRoute.pass2inout == "in") {
+                        routeAdd.pass2cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                    }
+                    if (currentRoute.pass3inout == "in") {
+                        routeAdd.pass3cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                    }
+                    routeAdd.lastCheckpoint = currentLocationS
+                    routeAdd.pass4inout = "out"
                 }
                 else -> false
             }
@@ -138,6 +263,9 @@ class PassengerActivity : AppCompatActivity() {
                                 val routeAdd = Route(currentRoute)
                                 routeAdd.pass1 = username
                                 routeAdd.pass1Start = currentLocationS
+                                routeAdd.lastCheckpoint = currentLocationS
+                                routeAdd.pass1cost = "0"
+                                routeAdd.pass1inout = "in"
                                 currentRoute = routeAdd
                                 ref.child(currentRouteId!!).setValue(routeAdd)
 
@@ -148,6 +276,42 @@ class PassengerActivity : AppCompatActivity() {
                                 val routeAdd = Route(currentRoute)
                                 routeAdd.pass2 = username
                                 routeAdd.pass2Start = currentLocationS
+
+                                // --------------------------------------------------
+                                var divideBy = 2
+                                val consumption = currentRoute.consumption!!.toDouble()
+
+                                println(consumption)
+                                if (currentRoute.pass1inout == "in") {
+                                    divideBy = divideBy + 1
+                                }
+                                if (currentRoute.pass3inout == "in") {
+                                    divideBy = divideBy + 1
+                                }
+                                if (currentRoute.pass4inout == "in") {
+                                    divideBy = divideBy + 1
+                                }
+
+                                val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                                var cost = (distance/100000) * consumption / divideBy
+                                println(distance)
+                                println(cost)
+
+                                if (currentRoute.pass1inout == "in") {
+                                    routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                                }
+                                if (currentRoute.pass3inout == "in") {
+                                    routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                                }
+                                if (currentRoute.pass4inout == "in") {
+                                    routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                                }
+                                routeAdd.lastCheckpoint = currentLocationS
+                                //---------------------------------------------------
+
+                                routeAdd.lastCheckpoint = currentLocationS
+                                routeAdd.pass2cost = "0"
+                                routeAdd.pass2inout = "in"
                                 currentRoute = routeAdd
                                 ref.child(currentRouteId!!).setValue(routeAdd)
 
@@ -158,6 +322,42 @@ class PassengerActivity : AppCompatActivity() {
                                 val routeAdd = Route(currentRoute)
                                 routeAdd.pass3 = username
                                 routeAdd.pass3Start = currentLocationS
+
+                                // --------------------------------------------------
+                                var divideBy = 2
+                                val consumption = currentRoute.consumption!!.toDouble()
+
+                                println(consumption)
+                                if (currentRoute.pass1inout == "in") {
+                                    divideBy = divideBy + 1
+                                }
+                                if (currentRoute.pass2inout == "in") {
+                                    divideBy = divideBy + 1
+                                }
+                                if (currentRoute.pass4inout == "in") {
+                                    divideBy = divideBy + 1
+                                }
+
+                                val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                                var cost = (distance/100000) * consumption / divideBy
+                                println(distance)
+                                println(cost)
+
+                                if (currentRoute.pass1inout == "in") {
+                                    routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                                }
+                                if (currentRoute.pass2inout == "in") {
+                                    routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                                }
+                                if (currentRoute.pass4inout == "in") {
+                                    routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                                }
+                                routeAdd.lastCheckpoint = currentLocationS
+                                //---------------------------------------------------
+
+                                routeAdd.lastCheckpoint = currentLocationS
+                                routeAdd.pass3cost = "0"
+                                routeAdd.pass3inout = "in"
                                 currentRoute = routeAdd
                                 ref.child(currentRouteId!!).setValue(routeAdd)
 
@@ -168,6 +368,41 @@ class PassengerActivity : AppCompatActivity() {
                                 val routeAdd = Route(currentRoute)
                                 routeAdd.pass4 = username
                                 routeAdd.pass4Start = currentLocationS
+                                // --------------------------------------------------
+                                var divideBy = 2
+                                val consumption = currentRoute.consumption!!.toDouble()
+
+                                println(consumption)
+                                if (currentRoute.pass1inout == "in") {
+                                    divideBy = divideBy + 1
+                                }
+                                if (currentRoute.pass2inout == "in") {
+                                    divideBy = divideBy + 1
+                                }
+                                if (currentRoute.pass3inout == "in") {
+                                    divideBy = divideBy + 1
+                                }
+
+                                val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                                var cost = (distance/100000) * consumption / divideBy
+                                println(distance)
+                                println(cost)
+
+                                if (currentRoute.pass1inout == "in") {
+                                    routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                                }
+                                if (currentRoute.pass2inout == "in") {
+                                    routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                                }
+                                if (currentRoute.pass3inout == "in") {
+                                    routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                                }
+                                routeAdd.lastCheckpoint = currentLocationS
+                                //---------------------------------------------------
+
+                                routeAdd.lastCheckpoint = currentLocationS
+                                routeAdd.pass4cost = "0"
+                                routeAdd.pass4inout = "in"
                                 currentRoute = routeAdd
                                 ref.child(currentRouteId!!).setValue(routeAdd)
 
@@ -182,6 +417,7 @@ class PassengerActivity : AppCompatActivity() {
                             true
                         }
                         else -> false
+
                     }
                 }
                 popup.inflate(R.menu.popup_route)
@@ -206,6 +442,11 @@ class PassengerActivity : AppCompatActivity() {
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 3000
         locationRequest.smallestDisplacement = 10f
+    }
+
+    private fun getDistance(checkpoint: String, currentLoc: String): Double {
+        val distance = 5000.0
+        return distance
     }
 
 }
