@@ -120,7 +120,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
 
         endButton.setOnClickListener {
             val routeAdd = Route(currentRoute)
-            var divideBy = 2
+            var divideBy = 1
             val consumption = currentRoute.consumption!!.toDouble()
             lateinit var newCost1: String
             lateinit var newCost2: String
