@@ -2,6 +2,7 @@ package com.example.fairride
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -122,10 +123,11 @@ class PassengerActivity : AppCompatActivity() {
 
                     val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
 
-                    var cost = (distance/100000) * consumption / divideBy
+                    var cost = ((distance/100000) * consumption / divideBy) * 5.20
                     println(distance)
                     println(cost)
-                    routeAdd.pass1cost = (cost + currentRoute.pass1cost!!.toDouble()).toString()
+                    val newCost = (cost + currentRoute.pass1cost!!.toDouble()).toString()
+                    routeAdd.pass1cost = newCost
                     if (currentRoute.pass2inout == "in") {
                         routeAdd.pass2cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
                     }
@@ -137,10 +139,11 @@ class PassengerActivity : AppCompatActivity() {
                     }
                     routeAdd.lastCheckpoint = currentLocationS
                     routeAdd.pass1inout = "out"
-                    //pobierz info o route
-                    //sprawdz inouts zeby wiedziec przez ile podzielic trase
-                    // sprawdz ostatni checkpoint i sprawdz dystans
-                    // policz skladke i zaktualizuj
+
+                    // enter summary
+                    val intent = Intent(this, PassengerSummaryActivity::class.java)
+                    intent.putExtra("cost", newCost)
+                    startActivity(intent)
                 }
                 "pass2" -> {
                     routeAdd.pass2End = currentLocationS
@@ -159,10 +162,11 @@ class PassengerActivity : AppCompatActivity() {
                     }
 
                     val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
-                    var cost = (distance/100000) * consumption / divideBy
+                    var cost = ((distance/100000) * consumption / divideBy) * 5.20
                     println(distance)
                     println(cost)
-                    routeAdd.pass2cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                    val newCost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
+                    routeAdd.pass2cost = newCost
                     if (currentRoute.pass1inout == "in") {
                         routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
                     }
@@ -174,6 +178,9 @@ class PassengerActivity : AppCompatActivity() {
                     }
                     routeAdd.lastCheckpoint = currentLocationS
                     routeAdd.pass2inout = "out"
+                    val intent = Intent(this, PassengerSummaryActivity::class.java)
+                    intent.putExtra("cost", newCost)
+                    startActivity(intent)
                 }
                 "pass3" -> {
                     routeAdd.pass3End = currentLocationS
@@ -192,11 +199,12 @@ class PassengerActivity : AppCompatActivity() {
                     }
 
                     val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
-                    var cost = (distance/100000) * consumption / divideBy
+                    var cost = ((distance/100000) * consumption / divideBy) * 5.20
                     println(distance)
                     println(cost)
 
-                    routeAdd.pass3cost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                    val newCost = (cost + currentRoute.pass3cost!!.toDouble()).toString()
+                    routeAdd.pass3cost = newCost
                     if (currentRoute.pass1inout == "in") {
                         routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
                     }
@@ -208,6 +216,9 @@ class PassengerActivity : AppCompatActivity() {
                     }
                     routeAdd.lastCheckpoint = currentLocationS
                     routeAdd.pass3inout = "out"
+                    val intent = Intent(this, PassengerSummaryActivity::class.java)
+                    intent.putExtra("cost", newCost)
+                    startActivity(intent)
                 }
                 "pass4" -> {
                     routeAdd.pass4End = currentLocationS
@@ -226,11 +237,12 @@ class PassengerActivity : AppCompatActivity() {
                     }
 
                     val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
-                    var cost = (distance/100000) * consumption / divideBy
+                    var cost = ((distance/100000) * consumption / divideBy) * 5.20
                     println(distance)
                     println(cost)
 
-                    routeAdd.pass4cost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                    val newCost = (cost + currentRoute.pass4cost!!.toDouble()).toString()
+                    routeAdd.pass4cost = newCost
                     if (currentRoute.pass1inout == "in") {
                         routeAdd.pass1cost = (cost + currentRoute.pass2cost!!.toDouble()).toString()
                     }
@@ -242,6 +254,9 @@ class PassengerActivity : AppCompatActivity() {
                     }
                     routeAdd.lastCheckpoint = currentLocationS
                     routeAdd.pass4inout = "out"
+                    val intent = Intent(this, PassengerSummaryActivity::class.java)
+                    intent.putExtra("cost", newCost)
+                    startActivity(intent)
                 }
                 else -> false
             }
@@ -293,7 +308,7 @@ class PassengerActivity : AppCompatActivity() {
                                 }
 
                                 val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
-                                var cost = (distance/100000) * consumption / divideBy
+                                var cost = ((distance/100000) * consumption / divideBy) * 5.20
                                 println(distance)
                                 println(cost)
 
@@ -339,7 +354,7 @@ class PassengerActivity : AppCompatActivity() {
                                 }
 
                                 val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
-                                var cost = (distance/100000) * consumption / divideBy
+                                var cost = ((distance/100000) * consumption / divideBy) * 5.20
                                 println(distance)
                                 println(cost)
 
@@ -384,7 +399,7 @@ class PassengerActivity : AppCompatActivity() {
                                 }
 
                                 val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
-                                var cost = (distance/100000) * consumption / divideBy
+                                var cost = ((distance/100000) * consumption / divideBy) * 5.20
                                 println(distance)
                                 println(cost)
 
