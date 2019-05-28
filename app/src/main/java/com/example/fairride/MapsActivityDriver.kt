@@ -219,6 +219,8 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
             } else {
                 intent.putExtra("user4", "")
             }
+            routeAdd.routeDone = "1"
+            ref.child(currentRouteId!!).setValue(routeAdd)
             startActivity(intent)
             // przejscie do nowego activity
             // a tam pobranie trasy, policzenie i podsumowanie
