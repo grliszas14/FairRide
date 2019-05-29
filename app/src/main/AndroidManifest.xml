@@ -19,8 +19,8 @@
             android:theme="@style/AppTheme">
         <activity android:name=".DriverSummaryActivity">
         </activity>
-        <activity android:name=".PassengerSummaryActivity">
-            android:launchMode="singleTop"
+        <activity android:name=".PassengerSummaryActivity" android:launchMode="singleTop">
+            <!--android:launchMode="singleTop"-->
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

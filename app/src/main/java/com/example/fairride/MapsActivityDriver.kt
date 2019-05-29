@@ -277,10 +277,15 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                     response ->
                 try {
                     distanceResponse = JSONObject(response)
+                    println(distanceResponse)
                     val features = distanceResponse.getJSONArray("features")
+                    println(features)
                     val properties = features.getJSONObject(0).getJSONObject("properties")
+                    println(properties)
                     val segments = properties.getJSONObject("segments")
+                    println(segments)
                     distance = segments.getJSONObject("distance").toString().toDouble()
+                    println(distance)
                 } catch (t: Throwable) {
                     distance = 0.0
                 }
@@ -289,6 +294,8 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
 
             }){}
 
+        val requestQueue = Volley.newRequestQueue(applicationContext)
+        requestQueue.add(distanceRequest)
         return distance
     }
 
