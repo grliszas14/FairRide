@@ -6,6 +6,9 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_passenger_summary.*
 import kotlin.math.roundToInt
+import android.content.DialogInterface
+import android.support.v7.app.AlertDialog
+
 
 class PassengerSummaryActivity : AppCompatActivity() {
 
@@ -28,4 +31,10 @@ class PassengerSummaryActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    override fun onBackPressed() {
+        finish()
+    }
 }
+
+
