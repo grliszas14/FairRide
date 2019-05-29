@@ -141,6 +141,7 @@ class PassengerActivity : AppCompatActivity() {
                                 intent.putExtra("cost", currentRoute.pass1cost)
                                 routeInfo.visibility = View.GONE
                                 ifIsInRoute = false
+                                whichPass = "elo"
                                 startActivity(intent)
                             }
                         }
@@ -150,6 +151,7 @@ class PassengerActivity : AppCompatActivity() {
                                 intent.putExtra("cost", currentRoute.pass2cost)
                                 routeInfo.visibility = View.GONE
                                 ifIsInRoute = false
+                                whichPass = "elo"
                                 startActivity(intent)
                             }
                         }
@@ -159,6 +161,7 @@ class PassengerActivity : AppCompatActivity() {
                                 intent.putExtra("cost", currentRoute.pass3cost)
                                 routeInfo.visibility = View.GONE
                                 ifIsInRoute = false
+                                whichPass = "elo"
                                 startActivity(intent)
                             }
                         }
@@ -168,9 +171,11 @@ class PassengerActivity : AppCompatActivity() {
                                 intent.putExtra("cost", currentRoute.pass4cost)
                                 routeInfo.visibility = View.GONE
                                 ifIsInRoute = false
+                                whichPass = "elo"
                                 startActivity(intent)
                             }
                         }
+                        else -> false
                     }
 
                     listView.adapter = ListViewRouteAdapter(applicationContext, routesList)
