@@ -21,6 +21,7 @@ import android.widget.*
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.firebase.client.DataSnapshot
 import com.firebase.client.FirebaseError
 import com.firebase.client.ValueEventListener
@@ -562,6 +563,8 @@ class PassengerActivity : AppCompatActivity() {
 
             }){}
 
+        val requestQueue = Volley.newRequestQueue(applicationContext)
+        requestQueue.add(distanceRequest)
         return distance
     }
 
