@@ -54,6 +54,7 @@ class PassengerActivity : AppCompatActivity() {
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var whichPass: String
     lateinit var distanceResponse: JSONObject
+    var calculatedDistance = 0.0
 
 
 
@@ -68,7 +69,7 @@ class PassengerActivity : AppCompatActivity() {
         var username = FirebaseAuth.getInstance().currentUser!!.displayName
         keyList = arrayListOf()
         routesList = arrayListOf()
-        currentRoute = Route("elo", "siema", "520", "supcio")
+        currentRoute = Route("", "", "", "")
         currentRouteId = "fajnie5"
         whichPass = "eloszka8"
         val listView = findViewById<ListView>(R.id.listViewRoutes)
@@ -105,6 +106,34 @@ class PassengerActivity : AppCompatActivity() {
                             }
                         }
                     }
+                    if (currentRoute.lastCheckpoint != "") {
+                        val point1 = currentRoute.lastCheckpoint!!.split(",")
+                        val point2 = currentLocation.toString().substring(10, 30).split(",")
+                        println(point1)
+                        println(point2)
+                        val distanceUrl =
+                            "https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248618d9768f9db4f1d8b5951a97bd8abf3&start=${point1[1]},${point1[0]}&end=${point2[1]},${point2[0]}"
+                        println(distanceUrl)
+                        val distanceRequest = object : StringRequest(
+                            Request.Method.GET, distanceUrl, Response.Listener<String> { response ->
+                                try {
+                                    distanceResponse = JSONObject(response)
+                                    val features = distanceResponse.getJSONArray("features")
+                                    val properties = features.getJSONObject(0).getJSONObject("properties")
+                                    val segments = properties.getJSONArray("segments")
+                                    calculatedDistance = segments.getJSONObject(0).getDouble("distance")
+                                    println(calculatedDistance)
+                                } catch (t: Throwable) {
+                                    calculatedDistance = 0.0
+                                }
+                            }, Response.ErrorListener { _ ->
+
+                            }) {}
+
+                        val requestQueue = Volley.newRequestQueue(applicationContext)
+                        requestQueue.add(distanceRequest)
+                    }
+
                     when (whichPass) {
                         "pass1" -> {
                             if (currentRoute.pass1inout == "out") {
@@ -180,7 +209,8 @@ class PassengerActivity : AppCompatActivity() {
                             divideBy = divideBy + 1
                         }
 
-                        val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        //val distance = getTestDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        val distance = calculatedDistance
 
                         var cost = ((distance / 100000) * consumption / divideBy) * 5.20
                         println(distance)
@@ -224,7 +254,8 @@ class PassengerActivity : AppCompatActivity() {
                             divideBy = divideBy + 1
                         }
 
-                        val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        //val distance = getTestDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        val distance = calculatedDistance
                         var cost = ((distance / 100000) * consumption / divideBy) * 5.20
                         println(distance)
                         println(cost)
@@ -265,7 +296,8 @@ class PassengerActivity : AppCompatActivity() {
                             divideBy = divideBy + 1
                         }
 
-                        val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        //val distance = getTestDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        val distance = calculatedDistance
                         var cost = ((distance / 100000) * consumption / divideBy) * 5.20
                         println(distance)
                         println(cost)
@@ -307,7 +339,8 @@ class PassengerActivity : AppCompatActivity() {
                             divideBy = divideBy + 1
                         }
 
-                        val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        //val distance = getTestDistance(currentRoute.lastCheckpoint!!, currentLocationS)
+                        val distance = calculatedDistance
                         var cost = ((distance / 100000) * consumption / divideBy) * 5.20
                         println(distance)
                         println(cost)
