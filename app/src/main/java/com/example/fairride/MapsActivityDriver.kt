@@ -20,6 +20,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.toolbox.RequestFuture
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.firebase.client.DataSnapshot
@@ -57,6 +58,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
     lateinit var from: String
     lateinit var currentRouteId: String
     lateinit var currentRoute: Route
+    var calculatedDistance = 0.0
 
 
 
@@ -73,6 +75,7 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
         val consumption = bundle.getDouble("consumption")
         val username = bundle.getString("username")
         currentRouteId = ref.push().key!!
+        currentRoute = Route("", "", "", "", "")
 
         ref.addValueEventListener(object : ValueEventListener, com.google.firebase.database.ValueEventListener {
             override fun onCancelled(p0: FirebaseError?) {
@@ -88,7 +91,35 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                     for (e in ds.children) {
                         if ( e.key == currentRouteId) {
                             currentRoute = e.getValue(Route::class.java)!!
+                            println("aktualizacja")
                         }
+                    }
+                    if (currentRoute.lastCheckpoint != "") {
+                        val point1 = currentRoute.lastCheckpoint!!.split(",")
+                        val point2 = currentLocation.toString().substring(10, 30).split(",")
+                        println(point1)
+                        println(point2)
+                        val distanceUrl =
+                            "https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248618d9768f9db4f1d8b5951a97bd8abf3&start=${point1[1]},${point1[0]}&end=${point2[1]},${point2[0]}"
+                        println(distanceUrl)
+                        val distanceRequest = object : StringRequest(
+                            Request.Method.GET, distanceUrl, Response.Listener<String> { response ->
+                                try {
+                                    distanceResponse = JSONObject(response)
+                                    val features = distanceResponse.getJSONArray("features")
+                                    val properties = features.getJSONObject(0).getJSONObject("properties")
+                                    val segments = properties.getJSONArray("segments")
+                                    calculatedDistance = segments.getJSONObject(0).getDouble("distance")
+                                    println(calculatedDistance)
+                                } catch (t: Throwable) {
+                                    calculatedDistance = 0.0
+                                }
+                            }, Response.ErrorListener { _ ->
+
+                            }) {}
+
+                        val requestQueue = Volley.newRequestQueue(applicationContext)
+                        requestQueue.add(distanceRequest)
                     }
                 }
 
@@ -146,8 +177,9 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
                 routeAdd.pass4End = currentLocation.toString().substring(10,30)
             }
 
-            val distance = getDistance(currentRoute.lastCheckpoint!!, currentLocation.toString().substring(10,30))
+            val distance = calculatedDistance
             var cost = ((distance/100000) * consumption / divideBy) * 5.20
+            println(cost)
 
             if (currentRoute.pass1cost != "" && currentRoute.pass1inout == "in") {
                 newCost1 = (cost + currentRoute.pass1cost!!.toDouble()).toString()
@@ -264,40 +296,10 @@ class MapsActivityDriver : AppCompatActivity(), OnMapReadyCallback {
         locationRequest.smallestDisplacement = 10f
     }
 
-    private fun getDistance(checkpoint: String, currentLoc: String): Double {
-        var distance = 0.0
-        val point1 = checkpoint.split(",")
-        val point2 = currentLoc.split(",")
-        println(point1)
-        println(point2)
-        val distanceUrl = "https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf6248618d9768f9db4f1d8b5951a97bd8abf3&start=${point1[1]},${point1[0]}&end=${point2[1]},${point2[0]}"
-        println(distanceUrl)
-        val distanceRequest = object : StringRequest(
-            Request.Method.GET, distanceUrl, Response.Listener<String> {
-                    response ->
-                try {
-                    distanceResponse = JSONObject(response)
-                    println(distanceResponse)
-                    val features = distanceResponse.getJSONArray("features")
-                    println(features)
-                    val properties = features.getJSONObject(0).getJSONObject("properties")
-                    println(properties)
-                    val segments = properties.getJSONObject("segments")
-                    println(segments)
-                    distance = segments.getJSONObject("distance").toString().toDouble()
-                    println(distance)
-                } catch (t: Throwable) {
-                    distance = 0.0
-                }
-            }, Response.ErrorListener {
-                    _ ->
+    //private fun getDistance(checkpoint: String, currentLoc: String): Double {
 
-            }){}
-
-        val requestQueue = Volley.newRequestQueue(applicationContext)
-        requestQueue.add(distanceRequest)
-        return distance
-    }
+        //eturn distance
+    //}
 
     private fun getTestDistance(checkpoint: String, currentLoc: String): Double {
         val distance = 5000.0
